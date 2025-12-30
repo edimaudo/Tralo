@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 
 app = Flask(__name__)
 
-# Expanded Portfolio with deep-dive metadata
+# Representative Credit Portfolio with detailed provisions
 portfolio_data = [
     {
         "id": "FAC-882", "borrower": "Global Logistics S.A.", "facility": "EUR 500M Revolver",
@@ -17,7 +17,7 @@ portfolio_data = [
         "exposure": 1200000000, "jurisdiction": "US", "obligation": "Asset Disposal Notice",
         "deadline": (datetime.now() + timedelta(days=1)).strftime('%Y-%m-%d'),
         "status": "Pending", "rm": "Markus Thorne", "cro": "Robert Vance",
-        "margin": "4.25%", "sector": "Energy", "covenant_summary": "Minimum Liquidity $50M; Senior Leverage < 2.5x"
+        "margin": "4.25%", "sector": "Energy", "covenant_summary": "Min Liquidity $50M; Senior Leverage < 2.5x"
     },
     {
         "id": "FAC-994", "borrower": "Nordic Pharma", "facility": "GBP 150M Capex Facility",
@@ -34,8 +34,8 @@ def analyze_risk(loan):
     if loan['status'] == "Overdue":
         return {"level": "CRITICAL", "path": f"{loan['cro']} (CRO)", "action": "Escalate to Credit Committee"}
     elif days_left <= 2:
-        return {"level": "HIGH", "path": f"{loan['rm']} (RM)", "action": "Issue Formal Warning"}
-    return {"level": "STABLE", "path": "Internal Review", "action": "Log Compliance"}
+        return {"level": "HIGH", "path": f"{loan['rm']} (RM)", "action": "Issue Warning Notice"}
+    return {"level": "STABLE", "path": "Internal Monitor", "action": "Log Compliance"}
 
 @app.route('/')
 def index():
@@ -49,7 +49,7 @@ def dashboard():
         if loan['risk']['level'] == "CRITICAL":
             total_crit += loan['exposure']
     
-    # Pre-formatting currency to fix the rendering bug
+    # Render with professional comma separators
     formatted_crit = "{:,.0f}".format(total_crit)
     return render_template('app.html', portfolio=portfolio_data, crit_val=formatted_crit)
 
