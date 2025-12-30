@@ -51,3 +51,37 @@ nav a { color: white; text-decoration: none; margin-left: 20px; font-size: 0.9re
 .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); }
 .modal-content { background: white; margin: 10% auto; padding: 40px; width: 550px; border-radius: 12px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); }
 textarea { width: 100%; margin-top: 15px; padding: 15px; box-sizing: border-box; border: 1px solid var(--border); border-radius: 6px; font-family: inherit; font-size: 0.9rem; }
+
+/* Management Action Workflow Buttons */
+.workflow-btn {
+    background: #ffffff;
+    border: 1.5px solid var(--navy);
+    color: var(--navy);
+    padding: 6px 14px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.2s;
+    width: 100%;
+}
+
+.workflow-btn:hover {
+    background: var(--navy);
+    color: white;
+}
+
+/* Detail Drawer Styling */
+.details-row { background: #fdfdfd; }
+.details-grid {
+    padding: 15px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    font-size: 0.85rem;
+    border-left: 4px solid var(--accent);
+    margin: 10px;
+}
+
+.icon-btn { background: none; border: none; cursor: pointer; font-size: 1.1rem; }
