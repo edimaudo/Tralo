@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <title>Tralo | Dashboard</title>
+</head>
+<body>
+    <nav class="top-nav">
+        <div class="nav-brand">TRALO <span>PORTFOLIO MONITOR</span></div>
+        <div class="nav-links"><a href="/">Home</a><a href="/help">Help Center</a></div>
+    </nav>
+
+    <div class="container">
+        <div class="summary-row">
+            <div class="card critical-card">
+                <label>CRITICAL EXPOSURE</label>
+                <h2>${:,.0f}</h2>
+            </div>
+            <div class="card">
+                <label>ACTIVE FACILITIES</label>
+                <h2>{{ portfolio|length }}</h2>
+            </div>
+        </div>
+
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Facility & Jurisdiction</th>
+                    <th>Obligation Type</th>
+                    <th>Deadline</th>
+                    <th>Risk Profile</th>
+                    <th>Escalation Path</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for loan in portfolio %}
+                <tr class="risk-row-{{ loan.risk.level.lower() }}">
+                    <td><strong>{{ loan.borrower }}</strong><br><small>{{ loan.facility }} | {{ loan.jurisdiction }}</small></td>
+                    <td>{{ loan.obligation }}</td>
+                    <td>{{ loan.deadline }}</td>
+                    <td><span class="badge {{ loan.risk.level }}">{{ loan.risk.level }}</span></td>
+                    <td><strong>{{ loan.risk.path }}</strong></td>
+                    <td><button class="btn-action" onclick="alert('Notifying {{ loan.risk.path }}...')">{{ loan.risk.action }}</button></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
