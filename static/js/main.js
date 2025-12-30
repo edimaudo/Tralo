@@ -23,6 +23,19 @@ function confirmDispatch() {
     closeAlert();
 }
 
+function toggleDetails(id) {
+    const el = document.getElementById(`details-${id}`);
+    el.style.display = (el.style.display === 'none') ? 'table-row' : 'none';
+}
+
+function triggerWorkflow(level) {
+    if (level === 'CRITICAL') {
+        alert("CRITICAL ESCALATION: Generating Credit Committee Breach Memo...");
+    } else {
+        alert("MANAGEMENT ACTION: Updating compliance log and notifying RM.");
+    }
+}
+
 // Ensure the modal closes if clicking outside of the content
 window.onclick = function(event) {
     const modal = document.getElementById('alertModal');
