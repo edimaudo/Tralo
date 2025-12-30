@@ -1,68 +1,56 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <title>Tralo | Dashboard</title>
-</head>
-<body>
-    <nav>
-        <div class="logo">TRALO</div>
-        <div class="links"><a href="/">Home</a><a href="/help">Help Center</a></div>
-    </nav>
-
-    <div class="container">
-        <div class="summary-bar">
-            <div class="stat-card critical">
-                <label>Total Critical Exposure</label>
-                <h2>${:,.0f}</h2>
-            </div>
-            <div class="stat-card">
-                <label>Portfolio Health</label>
-                <h2>{{ portfolio|length }} Active Facilities</h2>
-            </div>
+<div class="container">
+    <div class="summary-bar">
+        <div class="stat-card critical">
+            <label>Total Critical Exposure</label>
+            <h2>${{ crit_val }}</h2>
         </div>
-
-        <table class="data-table">
-            <thead>
-                <tr>
-                    <th>Facility Identity</th>
-                    <th>Obligation Details</th>
-                    <th>Risk Profile</th>
-                    <th>Escalation To</th>
-                    <th>Management Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for loan in portfolio %}
-                <tr class="risk-row-{{ loan.risk.level.lower() }}">
-                    <td><strong>{{ loan.borrower }}</strong><br><small>{{ loan.facility }} | {{ loan.jurisdiction }}</small></td>
-                    <td>{{ loan.obligation }}<br><small style="color: var(--slate);">Deadline: {{ loan.deadline }}</small></td>
-                    <td><span class="badge {{ loan.risk.level }}">{{ loan.risk.level }}</span></td>
-                    <td><strong>{{ loan.risk.path }}</strong></td>
-                    <td>
-                        <button class="btn-action" onclick="openAlert('{{ loan.risk.level }}', '{{ loan.risk.path }}')">
-                            {{ loan.risk.action }}
-                        </button>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-
-    <div id="alertModal" class="modal">
-        <div class="modal-content">
-            <h3 style="margin-top:0;">Escalation Dispatch</h3>
-            <p id="modalTarget" style="font-weight: 700; color: var(--accent);"></p>
-            <textarea id="templateText" rows="6"></textarea>
-            <div style="margin-top: 25px; text-align: right;">
-                <button onclick="closeAlert()" style="background:none; border:none; color:var(--slate); cursor:pointer; margin-right:20px;">Cancel</button>
-                <button class="btn-action" style="width: auto; padding: 10px 25px;" onclick="confirmDispatch()">Dispatch Alert</button>
-            </div>
+        <div class="stat-card">
+            <label>Portfolio Health</label>
+            <h2>{{ portfolio|length }} Facilities Active</h2>
         </div>
     </div>
 
-    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
-</body>
-</html>
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Borrower & Facility</th>
+                <th>Obligation</th>
+                <th>Risk Profile</th>
+                <th>Alert Path</th>
+                <th>Management Action</th>
+                <th>Details</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for loan in portfolio %}
+            <tr class="risk-row-{{ loan.risk.level.lower() }}">
+                <td>
+                    <strong>{{ loan.borrower }}</strong><br>
+                    <small>{{ loan.facility }}</small>
+                </td>
+                <td>{{ loan.obligation }}<br><small class="deadline">Due: {{ loan.deadline }}</small></td>
+                <td><span class="badge {{ loan.risk.level }}">{{ loan.risk.level }}</span></td>
+                <td><strong>{{ loan.risk.path }}</strong></td>
+                <td>
+                    <button class="workflow-btn" onclick="triggerWorkflow('{{ loan.risk.level }}')">
+                        {{ loan.risk.action }}
+                    </button>
+                </td>
+                <td>
+                    <button class="icon-btn" onclick="toggleDetails('{{ loan.id }}')">ℹ️</button>
+                </td>
+            </tr>
+            <tr id="details-{{ loan.id }}" class="details-row" style="display:none;">
+                <td colspan="6">
+                    <div class="details-grid">
+                        <div><strong>Sector:</strong> {{ loan.sector }}</div>
+                        <div><strong>Margin:</strong> {{ loan.margin }}</div>
+                        <div><strong>Covenant Summary:</strong> {{ loan.covenant_summary }}</div>
+                        <div><strong>Jurisdiction:</strong> {{ loan.jurisdiction }}</div>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
