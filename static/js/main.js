@@ -23,10 +23,12 @@ function confirmDispatch() {
     closeAlert();
 }
 
+/*
 function toggleDetails(id) {
     const el = document.getElementById(`details-${id}`);
     el.style.display = (el.style.display === 'none') ? 'table-row' : 'none';
 }
+*/
 
 function triggerWorkflow(level) {
     if (level === 'CRITICAL') {
@@ -34,6 +36,18 @@ function triggerWorkflow(level) {
     } else {
         alert("MANAGEMENT ACTION: Updating compliance log and notifying RM.");
     }
+}
+
+function toggleDetails(id) {
+    const el = document.getElementById(`details-${id}`);
+    el.style.display = (el.style.display === 'none') ? 'table-row' : 'none';
+}
+
+function executeWorkflow(level) {
+    const message = level === 'CRITICAL' 
+        ? "ACTION: Technical Breach Memorandum initiated for Credit Committee review." 
+        : "ACTION: Compliance status logged. RM notification dispatched.";
+    alert(message);
 }
 
 // Ensure the modal closes if clicking outside of the content
