@@ -3,63 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <title>Tralo | Portfolio Dashboard</title>
+    <title>Tralo | Dashboard</title>
 </head>
 <body>
-    <nav>
-        <div class="logo">TRALO</div>
-        <div class="links"><a href="/">Home</a><a href="/help">Help Center</a></div>
+    <nav class="navbar">
+        <div class="nav-logo">TRALO</div>
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/help">Governance</a>
+        </div>
     </nav>
 
     <div class="container">
-        <div class="summary-bar">
-            <div class="stat-card critical">
+        <div class="kpi-header">
+            <div class="kpi-card danger-top">
                 <label>Total Critical Exposure</label>
                 <h2>${{ crit_val }}</h2>
             </div>
-            <div class="stat-card">
-                <label>Portfolio Status</label>
-                <h2>{{ portfolio|length }} Active Facilities</h2>
+            <div class="kpi-card">
+                <label>Portfolio Health</label>
+                <h2>{{ portfolio|length }} Facilities Monitored</h2>
             </div>
         </div>
 
         <table class="data-table">
             <thead>
                 <tr>
-                    <th>Borrower & Facility</th>
+                    <th>Facility Identity</th>
                     <th>Obligation</th>
                     <th>Risk Profile</th>
                     <th>Alert Path</th>
-                    <th>Management Action</th>
-                    <th></th>
+                    <th>Workflow Action</th>
+                    <th>Details</th>
                 </tr>
             </thead>
             <tbody>
                 {% for loan in portfolio %}
-                <tr class="risk-row-{{ loan.risk.level.lower() }}">
-                    <td>
-                        <strong>{{ loan.borrower }}</strong><br>
-                        <small>{{ loan.facility }}</small>
-                    </td>
-                    <td>{{ loan.obligation }}<br><small class="deadline">Due: {{ loan.deadline }}</small></td>
+                <tr class="row-{{ loan.risk.level.lower() }}">
+                    <td><strong>{{ loan.borrower }}</strong><br><small>{{ loan.facility }}</small></td>
+                    <td>{{ loan.obligation }}<br><small>Due: {{ loan.deadline }}</small></td>
                     <td><span class="badge {{ loan.risk.level }}">{{ loan.risk.level }}</span></td>
                     <td><strong>{{ loan.risk.path }}</strong></td>
                     <td>
-                        <button class="workflow-btn" onclick="executeWorkflow('{{ loan.risk.level }}')">
+                        <button class="workflow-btn" onclick="runWorkflow('{{ loan.risk.level }}')">
                             {{ loan.risk.action }}
                         </button>
                     </td>
-                    <td>
-                        <button class="detail-toggle" onclick="toggleDetails('{{ loan.id }}')">Details</button>
-                    </td>
+                    <td><button class="detail-toggle" onclick="toggleDetails('{{ loan.id }}')">ℹ️</button></td>
                 </tr>
-                <tr id="details-{{ loan.id }}" class="detail-drawer" style="display:none;">
+                <tr id="details-{{ loan.id }}" class="detail-row" style="display:none;">
                     <td colspan="6">
-                        <div class="detail-grid">
-                            <div class="detail-item"><strong>Sector:</strong> {{ loan.sector }}</div>
-                            <div class="detail-item"><strong>Margin:</strong> {{ loan.margin }}</div>
-                            <div class="detail-item"><strong>Jurisdiction:</strong> {{ loan.jurisdiction }}</div>
-                            <div class="detail-item"><strong>Covenant Summary:</strong> {{ loan.covenant_summary }}</div>
+                        <div class="detail-content">
+                            <div class="detail-block"><strong>Sector:</strong> {{ loan.sector }}</div>
+                            <div class="detail-block"><strong>Margin:</strong> {{ loan.margin }}</div>
+                            <div class="detail-block"><strong>Jurisdiction:</strong> {{ loan.jurisdiction }}</div>
+                            <div class="detail-block"><strong>Provision Summary:</strong> {{ loan.provision_summary }}</div>
                         </div>
                     </td>
                 </tr>
