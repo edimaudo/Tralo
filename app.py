@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 
 app = Flask(__name__)
 
-# Representative Credit Portfolio with detailed provisions
+# Portfolio Data with expanded metadata for detailed view
 portfolio_data = [
     {
         "id": "FAC-882", "borrower": "Global Logistics S.A.", "facility": "EUR 500M Revolver",
@@ -49,12 +49,12 @@ def dashboard():
         if loan['risk']['level'] == "CRITICAL":
             total_crit += loan['exposure']
     
-    # Render with professional comma separators
+    # Pre-formatting currency to ensure correct rendering
     formatted_crit = "{:,.0f}".format(total_crit)
     return render_template('app.html', portfolio=portfolio_data, crit_val=formatted_crit)
 
 @app.route('/help')
-def help():
+def help_center():
     return render_template('help.html')
 
 if __name__ == '__main__':
