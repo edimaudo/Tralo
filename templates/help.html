@@ -8,34 +8,18 @@
 <body>
     <nav>
         <div class="logo">TRALO</div>
-        <div class="links"><a href="/dashboard">Return to Dashboard</a><a href="/">Home</a></div>
+        <div class="links"><a href="/dashboard">Return to Dashboard</a></div>
     </nav>
-
     <div class="container">
-        <section>
-            <h1>System Workflow</h1>
-            <p style="color: var(--slate); font-size: 1.1rem; margin-top: -10px;">Automating the gap between facility agreements and operational risk.</p>
-            <div class="workflow-grid">
-                {% for item in workflow %}
-                <div class="workflow-card">
-                    <h4>{{ item.step }}</h4>
-                    <p>{{ item.desc }}</p>
-                </div>
-                {% endfor %}
-            </div>
-        </section>
-
-        <section style="margin-top: 60px;">
-            <h2>Industry Glossary</h2>
-            <div style="background: white; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); padding: 30px;">
-                {% for item in glossary %}
-                <div style="margin-bottom: 25px; border-bottom: 1px solid var(--border); padding-bottom: 15px;">
-                    <strong style="display: block; font-size: 1rem; color: var(--navy); margin-bottom: 5px;">{{ item.term }}</strong>
-                    <p style="margin:0; font-size: 0.9rem; color: var(--slate);">{{ item.def }}</p>
-                </div>
-                {% endfor %}
-            </div>
-        </section>
+        <h1>Institutional Framework</h1>
+        <div class="help-section">
+            <h3>Standard Operating Procedures</h3>
+            <p>Tralo automates the monitoring of Information Obligations to mitigate technical default risks.</p>
+            <ul>
+                <li><strong>Critical:</strong> Overdue status requiring Credit Officer intervention.</li>
+                <li><strong>High:</strong> Proximity to deadline ( < 48 hours ) requiring RM notification.</li>
+            </ul>
+        </div>
     </div>
 </body>
 </html>
