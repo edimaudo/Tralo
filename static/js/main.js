@@ -23,13 +23,6 @@ function confirmDispatch() {
     closeAlert();
 }
 
-/*
-function toggleDetails(id) {
-    const el = document.getElementById(`details-${id}`);
-    el.style.display = (el.style.display === 'none') ? 'table-row' : 'none';
-}
-*/
-
 function triggerWorkflow(level) {
     if (level === 'CRITICAL') {
         alert("CRITICAL ESCALATION: Generating Credit Committee Breach Memo...");
@@ -38,16 +31,25 @@ function triggerWorkflow(level) {
     }
 }
 
-function toggleDetails(id) {
-    const el = document.getElementById(`details-${id}`);
-    el.style.display = (el.style.display === 'none') ? 'table-row' : 'none';
-}
+
 
 function executeWorkflow(level) {
     const message = level === 'CRITICAL' 
         ? "ACTION: Technical Breach Memorandum initiated for Credit Committee review." 
         : "ACTION: Compliance status logged. RM notification dispatched.";
     alert(message);
+}
+
+function toggleDetails(id) {
+    const el = document.getElementById(`details-${id}`);
+    el.style.display = (el.style.display === 'none') ? 'table-row' : 'none';
+}
+
+function runWorkflow(level) {
+    const msg = level === 'CRITICAL' 
+        ? "ESCALATION: Generating Formal Notice of Technical Breach for Credit Committee approval." 
+        : "WORKFLOW: Notification status updated. Dispatching inquiry to Relationship Manager.";
+    alert(msg);
 }
 
 // Ensure the modal closes if clicking outside of the content
