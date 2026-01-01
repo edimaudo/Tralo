@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <title>Milestone History | {{ loan.borrower }}</title>
+</head>
+<body>
+    <nav class="nav-header">
+        <div class="logo-small">TRALO</div>
+        <div class="nav-links"><a href="{{ url_for('dashboard') }}">Back to Monitor</a></div>
+    </nav>
+
+    <div class="container">
+        <h1>Milestone Track History</h1>
+        <h3>{{ loan.borrower }} — {{ loan.id }}</h3>
+        
+        <div class="timeline">
+            {% for entry in history %}
+            <div class="timeline-item">
+                <div class="time-stamp"><strong>{{ entry.date }}</strong></div>
+                <div class="event-details">
+                    <span class="pill {{ entry.status }}">{{ entry.status }}</span>
+                    <p><strong>{{ entry.event }}</strong></p>
+                    <small>Actioned by: {{ entry.user }}</small>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>
