@@ -5,53 +5,39 @@ app = Flask(__name__)
 
 portfolio_data = [
     {
-        "id": "FAC-882", "borrower": "Global Logistics S.A.", "facility": "EUR 500M Revolver",
-        "exposure": 500000000, "jurisdiction": "UK", "obligation": "Quarterly Financial Statements",
+        "id": "LN-101", "borrower": "Precision Mfg Ltd", "loan_type": "Term Loan A",
+        "exposure": 450000000, "jurisdiction": "UK", "track_milestone": "Annual Audited Accounts",
         "deadline": (datetime.now() - timedelta(days=2)).strftime('%Y-%m-%d'),
         "status": "Overdue", "rm": "Alice Sterling", "cro": "Robert Vance",
-        "margin": "3.50%", "sector": "Logistics", "provision_summary": "Net Debt/EBITDA < 3.0x; Interest Cover > 4.0x"
+        "margin": "2.25%", "sector": "Manufacturing", "provision_summary": "Net Debt/EBITDA < 3.5x"
     },
     {
-        "id": "FAC-110", "borrower": "Titan Energy Corp", "facility": "USD 1.2B Term Loan B",
-        "exposure": 1200000000, "jurisdiction": "US", "obligation": "Asset Disposal Notice",
+        "id": "LN-202", "borrower": "Pacific Infra Group", "loan_type": "Project Finance Facility",
+        "exposure": 1100000000, "jurisdiction": "US", "track_milestone": "Quarterly Progress Report",
         "deadline": (datetime.now() + timedelta(days=1)).strftime('%Y-%m-%d'),
         "status": "Pending", "rm": "Markus Thorne", "cro": "Robert Vance",
-        "margin": "4.25%", "sector": "Energy", "provision_summary": "Min Liquidity $50M; Senior Leverage < 2.5x"
+        "margin": "3.10%", "sector": "Infrastructure", "provision_summary": "DSCR > 1.20x"
     },
     {
-        "id": "FAC-994", "borrower": "Nordic Pharma", "facility": "GBP 150M Capex Facility",
-        "exposure": 150000000, "jurisdiction": "UK", "obligation": "Compliance Certificate",
+        "id": "LN-303", "borrower": "Global Telecom Corp", "loan_type": "Revolving Credit Facility",
+        "exposure": 850000000, "jurisdiction": "Germany", "track_milestone": "Compliance Certificate",
         "deadline": (datetime.now() + timedelta(days=15)).strftime('%Y-%m-%d'),
         "status": "Submitted", "rm": "James Chen", "cro": "Sarah Jenkins",
-        "margin": "2.75%", "sector": "Healthcare", "provision_summary": "Clean Down Period: 15 Days; R&D Spend > 10%"
+        "margin": "1.75%", "sector": "Telecommunications", "provision_summary": "Minimum Net Worth > $2B"
     },
     {
-        "id": "FAC-442", "borrower": "CloudScale Systems", "facility": "USD 200M Venture Debt",
-        "exposure": 200000000, "jurisdiction": "US", "obligation": "Series D Funding Proof",
+        "id": "LN-404", "borrower": "Apex Logistics", "loan_type": "Asset-Based Loan",
+        "exposure": 250000000, "jurisdiction": "UK", "track_milestone": "Borrowing Base Certificate",
         "deadline": (datetime.now() - timedelta(days=5)).strftime('%Y-%m-%d'),
-        "status": "Overdue", "rm": "Markus Thorne", "cro": "Sarah Jenkins",
-        "margin": "6.50%", "sector": "Technology", "provision_summary": "Runway > 12 Months; Minimum ARR $100M"
+        "status": "Overdue", "rm": "Alice Sterling", "cro": "Sarah Jenkins",
+        "margin": "2.50%", "sector": "Transportation", "provision_summary": "Eligible Receivables > 80%"
     },
     {
-        "id": "FAC-205", "borrower": "EuroRetail Holdings", "facility": "EUR 300M Inventory Line",
-        "exposure": 300000000, "jurisdiction": "Germany", "obligation": "Inventory Valuation Report",
-        "deadline": (datetime.now() + timedelta(days=20)).strftime('%Y-%m-%d'),
-        "status": "Submitted", "rm": "James Chen", "cro": "Robert Vance",
-        "margin": "2.10%", "sector": "Retail", "provision_summary": "Max Leverage 3.5x; No Change of Control"
-    },
-    {
-        "id": "FAC-771", "borrower": "Sterling Property REIT", "facility": "GBP 850M Dev Finance",
-        "exposure": 850000000, "jurisdiction": "UK", "obligation": "LTV Certificate",
-        "deadline": (datetime.now() + timedelta(hours=12)).strftime('%Y-%m-%d'),
-        "status": "Pending", "rm": "Alice Sterling", "cro": "Sarah Jenkins",
-        "margin": "3.80%", "sector": "Real Estate", "provision_summary": "LTV < 65%; Interest Reserve 12 Months"
-    },
-    {
-        "id": "FAC-339", "borrower": "Apex Mining Group", "facility": "AUD 750M Bridge Loan",
-        "exposure": 750000000, "jurisdiction": "Australia", "obligation": "Environmental Impact Audit",
+        "id": "LN-505", "borrower": "Solaris Energy", "loan_type": "Green Bond Facility",
+        "exposure": 600000000, "jurisdiction": "France", "track_milestone": "ESG Impact Statement",
         "deadline": (datetime.now() + timedelta(days=3)).strftime('%Y-%m-%d'),
-        "status": "Pending", "rm": "Markus Thorne", "cro": "Robert Vance",
-        "margin": "5.25%", "sector": "Mining", "provision_summary": "Capex Sweep 50%; Min Ore Reserve 2M Tons"
+        "status": "Pending", "rm": "James Chen", "cro": "Robert Vance",
+        "margin": "1.90%", "sector": "Utilities", "provision_summary": "Renewable Mix > 90%"
     }
 ]
 
