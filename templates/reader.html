@@ -1,49 +1,46 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <title>Tralo | Document Intelligence</title>
-</head>
-<body>
-    <nav class="nav-header">
-        <div class="logo-small">TRALO</div>
-        <div class="nav-links"><a href="{{ url_for('dashboard') }}">Dashboard</a></div>
-    </nav>
-
-    <div class="container">
-        <div class="reader-split">
-            <div class="doc-preview">
-                <h3>Source: Credit_Agreement_v4.pdf</h3>
-                <div class="dummy-pdf">
-                    <p>Section 5.1: The Borrower shall ensure that the Leverage Ratio... </p>
-                    <p>Section 7.2: The Borrower shall provide evidence of insurance...</p>
-                </div>
-            </div>
-            <div class="extracted-data">
-                <h3>Extracted Track Milestones</h3>
-                <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th>Clause</th>
-                            <th>Requirement</th>
-                            <th>Frequency</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for c in clauses %}
-                        <tr>
-                            <td><strong>{{ c.clause }}</strong><br>{{ c.title }}</td>
-                            <td>{{ c.requirement }}</td>
-                            <td>{{ c.frequency }}</td>
-                            <td><button class="workflow-btn">Add to Track</button></td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+<div class="container">
+    <h1>Document Intelligence Ingestion</h1>
+    <div class="reader-split">
+        <div class="doc-preview">
+            <div class="dummy-pdf">
+                <p><strong>CREDIT AGREEMENT</strong></p>
+                <p class="highlight">Borrower: {{ loan.borrower }}</p>
+                <p>Facility: {{ loan.loan_type }}</p>
+                <p class="highlight">Sector: {{ loan.sector }}</p>
+                <p>Margin: {{ loan.margin }}</p>
+                <p class="highlight">Milestone: {{ loan.track_milestone }}</p>
             </div>
         </div>
+
+        <div class="extraction-panel">
+            <h3>Extracted Tracking Parameters</h3>
+            <form action="{{ url_for('add_loan') }}" method="POST">
+                <div class="form-grid">
+                    <div class="input-group">
+                        <label>Borrower</label>
+                        <input type="text" name="borrower" value="{{ loan.borrower }}" readonly>
+                    </div>
+                    <div class="input-group">
+                        <label>Sector</label>
+                        <input type="text" name="sector" value="{{ loan.sector }}" readonly>
+                    </div>
+                    <div class="input-group">
+                        <label>Loan Type</label>
+                        <input type="text" name="loan_type" value="{{ loan.loan_type }}" readonly>
+                    </div>
+                    <div class="input-group">
+                        <label>Exposure (Numeric)</label>
+                        <input type="number" name="exposure" value="{{ loan.exposure }}" readonly>
+                    </div>
+                    <input type="hidden" name="margin" value="{{ loan.margin }}">
+                    <input type="hidden" name="jurisdiction" value="{{ loan.jurisdiction }}">
+                    <input type="hidden" name="track_milestone" value="{{ loan.track_milestone }}">
+                    <input type="hidden" name="deadline" value="{{ loan.deadline }}">
+                    <input type="hidden" name="provision_summary" value="{{ loan.provision_summary }}">
+                </div>
+                <button type="submit" class="btn-filled w-100">Confirm & Add to Portfolio</button>
+            </form>
+            <button onclick="window.location.reload()" class="btn-ghost w-100" style="margin-top:10px; color:black;">Scan Next Document</button>
+        </div>
     </div>
-</body>
-</html>
+</div>
