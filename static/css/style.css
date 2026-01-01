@@ -6,12 +6,28 @@
     --border: #e2e8f0;
 }
 
+
+
 body { 
     font-family: 'Inter', system-ui, -apple-system, sans-serif; 
     background: #f8fafc; 
     margin: 0; 
     color: var(--navy); 
 }
+
+/* --- PILLS & STATUS --- */
+.pill { 
+    padding: 4px 10px; 
+    border-radius: 4px; 
+    font-size: 0.7rem; 
+    font-weight: 900; 
+    display: inline-block;
+    text-transform: uppercase;
+}
+
+.CRITICAL { background: #fee2e2; color: var(--danger); }
+.HIGH { background: #fef3c7; color: #b45309; }
+.STABLE { background: #d1fae5; color: #065f46; }
 
 /* --- LANDING PAGE HIERARCHY --- */
 .landing-page { 
@@ -201,19 +217,7 @@ body {
     font-size: 0.75rem; 
 }
 
-/* --- PILLS & STATUS --- */
-.pill { 
-    padding: 4px 10px; 
-    border-radius: 4px; 
-    font-size: 0.7rem; 
-    font-weight: 900; 
-    display: inline-block;
-    text-transform: uppercase;
-}
 
-.CRITICAL { background: #fee2e2; color: var(--danger); }
-.HIGH { background: #fef3c7; color: #b45309; }
-.STABLE { background: #d1fae5; color: #065f46; }
 
 /* --- HELP & GOVERNANCE --- */
 .help-wrapper { 
