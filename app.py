@@ -41,6 +41,31 @@ portfolio_data = [
     }
 ]
 
+# Milestone History Data
+history_logs = [
+    {"loan_id": "LN-101", "date": "2023-10-25", "event": "Deadline Missed", "status": "OFF-TRACK", "user": "System Auto-Flag"},
+    {"loan_id": "LN-101", "date": "2023-10-20", "event": "Nudge Sent", "status": "AT-RISK", "user": "Alice Sterling (RM)"},
+    {"loan_id": "LN-202", "date": "2023-10-28", "event": "Quarterly Report Uploaded", "status": "ON-TRACK", "user": "Borrower Portal"},
+    {"loan_id": "LN-202", "date": "2023-10-15", "event": "Track Initialized", "status": "ON-TRACK", "user": "Sarah Jenkins (CRO)"}
+]
+
+@app.route('/history/<loan_id>')
+def history(loan_id):
+    # Filter history for specific loan
+    loan_history = [h for h in history_logs if h['loan_id'] == loan_id]
+    loan = next((item for item in portfolio_data if item["id"] == loan_id), None)
+    return render_template('history.html', history=loan_history, loan=loan)
+
+@app.route('/reader')
+def reader():
+    # Simulated OCR extraction data
+    extracted_clauses = [
+        {"clause": "5.1(a)", "title": "Financial Indebtedness", "requirement": "Net Debt/EBITDA < 3.00:1", "frequency": "Quarterly"},
+        {"clause": "7.2", "title": "Insurance Certificate", "requirement": "Maintain $50M liability cover", "frequency": "Annual"},
+        {"clause": "12.4", "title": "Asset Sales", "requirement": "Notice required for sales > $10M", "frequency": "Ad-hoc"}
+    ]
+    return render_template('reader.html', clauses=extracted_clauses)
+
 def analyze_risk(loan):
     deadline = datetime.strptime(loan['deadline'], '%Y-%m-%d')
     days_left = (deadline - datetime.now()).days
