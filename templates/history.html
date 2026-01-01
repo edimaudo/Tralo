@@ -2,34 +2,72 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <title>Tralo | Milestone History</title>
 </head>
 <body>
     <nav class="nav-header">
         <div class="logo-small">TRALO</div>
-        <div class="nav-links"><a href="{{ url_for('dashboard') }}">Back to Monitor</a></div>
+        <div class="nav-links">
+            <a href="{{ url_for('index') }}">Home</a>
+            <a href="{{ url_for('dashboard') }}">Monitor</a>
+            <a href="{{ url_for('history') }}" class="active">History</a>
+            <a href="{{ url_for('help') }}">Governance</a>
+        </div>
     </nav>
 
     <div class="container">
-        <h1>Milestone Track History</h1>
-        <h3>Borrower: {{ loan.borrower }} ({{ loan.id }})</h3>
-        
-        <div class="timeline" style="margin-top: 30px; border-left: 2px solid #e2e8f0; padding-left: 20px;">
-            {% for entry in history %}
-            <div class="timeline-item" style="margin-bottom: 25px; position: relative;">
-                <div class="time-stamp"><strong>{{ entry.date }}</strong></div>
-                <div class="event-details">
-                    <span class="pill {{ entry.status }}">{{ entry.status }}</span>
-                    <p><strong>{{ entry.event }}</strong></p>
-                    <small>Actioned by: {{ entry.user }}</small>
-                </div>
-            </div>
-            {% endfor %}
-            {% if not history %}
-                <p>No historical events logged for this track yet.</p>
-            {% endif %}
+        <div class="header-section">
+            <h1>Milestone History Log</h1>
+            <p>Comprehensive audit trail for all governance and compliance tracking events.</p>
         </div>
+
+        <div class="table-container">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Loan ID</th>
+                        <th>Borrower</th>
+                        <th>Event Description</th>
+                        <th>Status at Event</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for entry in history %}
+                    <tr>
+                        <td>{{ entry.date }}</td>
+                        <td><code class="loan-id-tag">{{ entry.loan_id }}</code></td>
+                        <td><strong>{{ entry.borrower }}</strong></td>
+                        <td>{{ entry.event }}</td>
+                        <td>
+                            {% set status_class = 'success' %}
+                            {% if entry.status == 'OFF-TRACK' %}
+                                {% set status_class = 'danger' %}
+                            {% elif entry.status == 'AT-RISK' %}
+                                {% set status_class = 'warning' %}
+                            {% endif %}
+                            
+                            <span class="pill status-{{ status_class }}">
+                                {{ entry.status }}
+                            </span>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        {% if not history %}
+        <div class="empty-state">
+            <p>No historical events recorded. Tracks are initialized upon document ingestion.</p>
+        </div>
+        {% endif %}
     </div>
+
+    <footer class="footer-simple">
+        <p>&copy; 2025 Tralo Systems | Internal Audit & Governance View</p>
+    </footer>
 </body>
 </html>
