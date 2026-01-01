@@ -6,58 +6,58 @@
     <title>Tralo | Dashboard</title>
 </head>
 <body>
-    <nav class="navbar">
-        <div class="nav-logo">TRALO</div>
+    <nav class="nav-header">
+        <div class="logo-small">TRALO</div>
         <div class="nav-links">
-            <a href="/">Home</a>
-            <a href="/help">Governance</a>
+            <a href="{{ url_for('index') }}">Home</a>
+            <a href="{{ url_for('help') }}">Governance</a>
         </div>
     </nav>
 
     <div class="container">
-        <div class="kpi-header">
-            <div class="kpi-card danger-top">
+        <div class="summary-stats">
+            <div class="stat-box alert-border">
                 <label>Total Critical Exposure</label>
                 <h2>${{ crit_val }}</h2>
             </div>
-            <div class="kpi-card">
-                <label>Portfolio Health</label>
-                <h2>{{ portfolio|length }} Facilities Monitored</h2>
+            <div class="stat-box">
+                <label>Facilities Monitored</label>
+                <h2>{{ portfolio|length }}</h2>
             </div>
         </div>
 
         <table class="data-table">
             <thead>
                 <tr>
-                    <th>Facility Identity</th>
+                    <th>Borrower & Facility</th>
                     <th>Obligation</th>
                     <th>Risk Profile</th>
-                    <th>Alert Path</th>
-                    <th>Workflow Action</th>
-                    <th>Details</th>
+                    <th>Stakeholder Alert Path</th>
+                    <th>Management Action</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
                 {% for loan in portfolio %}
-                <tr class="row-{{ loan.risk.level.lower() }}">
+                <tr class="risk-{{ loan.risk.level.lower() }}">
                     <td><strong>{{ loan.borrower }}</strong><br><small>{{ loan.facility }}</small></td>
                     <td>{{ loan.obligation }}<br><small>Due: {{ loan.deadline }}</small></td>
-                    <td><span class="badge {{ loan.risk.level }}">{{ loan.risk.level }}</span></td>
+                    <td><span class="pill {{ loan.risk.level }}">{{ loan.risk.level }}</span></td>
                     <td><strong>{{ loan.risk.path }}</strong></td>
                     <td>
-                        <button class="workflow-btn" onclick="runWorkflow('{{ loan.risk.level }}')">
+                        <button class="workflow-btn" onclick="triggerWorkflow('{{ loan.risk.level }}')">
                             {{ loan.risk.action }}
                         </button>
                     </td>
-                    <td><button class="detail-toggle" onclick="toggleDetails('{{ loan.id }}')">ℹ️</button></td>
+                    <td><button class="expand-btn" onclick="toggleDetails('{{ loan.id }}')">Details</button></td>
                 </tr>
-                <tr id="details-{{ loan.id }}" class="detail-row" style="display:none;">
+                <tr id="details-{{ loan.id }}" class="drawer-row" style="display:none;">
                     <td colspan="6">
-                        <div class="detail-content">
-                            <div class="detail-block"><strong>Sector:</strong> {{ loan.sector }}</div>
-                            <div class="detail-block"><strong>Margin:</strong> {{ loan.margin }}</div>
-                            <div class="detail-block"><strong>Jurisdiction:</strong> {{ loan.jurisdiction }}</div>
-                            <div class="detail-block"><strong>Provision Summary:</strong> {{ loan.provision_summary }}</div>
+                        <div class="drawer-content">
+                            <div class="d-cell"><strong>Sector:</strong> {{ loan.sector }}</div>
+                            <div class="d-cell"><strong>Margin:</strong> {{ loan.margin }}</div>
+                            <div class="d-cell"><strong>Jurisdiction:</strong> {{ loan.jurisdiction }}</div>
+                            <div class="d-cell"><strong>Provision Summary:</strong> {{ loan.provision_summary }}</div>
                         </div>
                     </td>
                 </tr>
