@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <title>Tralo | Document Intelligence</title>
+</head>
+<body>
+    <nav class="nav-header">
+        <div class="logo-small">TRALO</div>
+        <div class="nav-links"><a href="{{ url_for('dashboard') }}">Dashboard</a></div>
+    </nav>
+
+    <div class="container">
+        <div class="reader-split">
+            <div class="doc-preview">
+                <h3>Source: Credit_Agreement_v4.pdf</h3>
+                <div class="dummy-pdf">
+                    <p>Section 5.1: The Borrower shall ensure that the Leverage Ratio... </p>
+                    <p>Section 7.2: The Borrower shall provide evidence of insurance...</p>
+                </div>
+            </div>
+            <div class="extracted-data">
+                <h3>Extracted Track Milestones</h3>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Clause</th>
+                            <th>Requirement</th>
+                            <th>Frequency</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for c in clauses %}
+                        <tr>
+                            <td><strong>{{ c.clause }}</strong><br>{{ c.title }}</td>
+                            <td>{{ c.requirement }}</td>
+                            <td>{{ c.frequency }}</td>
+                            <td><button class="workflow-btn">Add to Track</button></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
