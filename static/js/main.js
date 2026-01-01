@@ -23,13 +23,7 @@ function confirmDispatch() {
     closeAlert();
 }
 
-function triggerWorkflow(level) {
-    if (level === 'CRITICAL') {
-        alert("CRITICAL ESCALATION: Generating Credit Committee Breach Memo...");
-    } else {
-        alert("MANAGEMENT ACTION: Updating compliance log and notifying RM.");
-    }
-}
+
 
 
 
@@ -43,6 +37,13 @@ function executeWorkflow(level) {
 function toggleDetails(id) {
     const el = document.getElementById(`details-${id}`);
     el.style.display = (el.style.display === 'none') ? 'table-row' : 'none';
+}
+
+function triggerWorkflow(level) {
+    const msg = level === 'CRITICAL' 
+        ? "ACTION: Formal technical breach memorandum initiated for Credit Committee." 
+        : "ACTION: Facility status logged. Notification dispatched to Relationship Manager.";
+    alert(msg);
 }
 
 function runWorkflow(level) {
