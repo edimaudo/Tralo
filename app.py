@@ -34,6 +34,19 @@ def analyze_track_status(loan):
 def index():
     return render_template('index.html')
 
+# Add this route handler
+@app.route('/history/<loan_id>')
+def history(loan_id):
+    # Filter logs for the specific loan
+    loan_history = [h for h in history_logs if h['loan_id'] == loan_id]
+    # Find the loan details to show the borrower name
+    loan = next((item for item in portfolio_data if item["id"] == loan_id), None)
+    
+    if not loan:
+        return "Loan not found", 404
+        
+    return render_template('history.html', history=loan_history, loan=loan)
+
 @app.route('/dashboard')
 def dashboard():
     total_off_track = 0
