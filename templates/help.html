@@ -3,35 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <title>Tralo | Governance Manual</title>
+    <title>Tralo | Help & Framework</title>
 </head>
 <body>
-    <nav class="navbar">
-        <div class="nav-logo">TRALO</div>
-        <div class="nav-links"><a href="/dashboard">Back to Dashboard</a></div>
+    <nav class="nav-header">
+        <div class="logo-small">TRALO</div>
+        <div class="nav-links"><a href="{{ url_for('dashboard') }}">Back to Dashboard</a></div>
     </nav>
 
-    <div class="container-narrow">
-        <h1>Governance Framework</h1>
-        <p class="intro">Tralo provides an institutional-grade oversight layer for managing reporting compliance across credit portfolios.</p>
+    <div class="help-wrapper">
+        <h1>Operational Framework</h1>
+        <p class="intro-text">Tralo bridges the gap between static facility agreements and operational compliance.</p>
         
-        <section class="help-box">
-            <h3>Monitoring Logic</h3>
-            <p>The system calculates <strong>Total Critical Exposure</strong> by identifying all facilities where a mandatory reporting deadline has passed without document submission. This figure represents the total capital currently in a state of technical breach.</p>
-            <ul>
-                <li><strong>Proactive Alerting:</strong> Risk levels shift to "High" when a deadline is within 48 hours.</li>
-                <li><strong>Workflow Escalation:</strong> Breaches are routed to Credit Risk Officers (CRO), while upcoming tasks remain with Relationship Managers (RM).</li>
-            </ul>
-        </section>
-
-        <section class="help-box">
-            <h3>Operational Glossary</h3>
-            <table class="help-table">
-                <tr><td><strong>Facility Provision:</strong></td><td>Specific financial or administrative terms within the credit agreement.</td></tr>
-                <tr><td><strong>Reporting Window:</strong></td><td>The timeframe allotted for a borrower to submit mandatory financial data.</td></tr>
-                <tr><td><strong>Workflow Action:</strong></td><td>Professional steps required to remediate current risk levels.</td></tr>
-            </table>
-        </section>
+        <div class="help-card">
+            <h3>Decision Support Logic</h3>
+            <p><strong>Risk Analysis:</strong> Obligations are prioritized by "Time-to-Default," with automated status shifts as deadlines approach.</p>
+            <p><strong>Stakeholder Routing:</strong> The system automatically assigns management actions to Relationship Managers (RM) for upcoming tasks and Credit Risk Officers (CRO) for breaches.</p>
+            <p><strong>Exposure Valuation:</strong> Real-time aggregation of capital linked to overdue facilities (Technical Breach).</p>
+        </div>
     </div>
 </body>
 </html>
