@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <title>Tralo | Loan Obligation Monitoring System</title>
 </head>
@@ -10,68 +11,77 @@
         <div class="logo-small">TRALO</div>
         <div class="nav-links">
             <a href="{{ url_for('index') }}">Home</a>
+            <a href="{{ url_for('dashboard') }}" class="active">Monitor</a>
+            <a href="{{ url_for('history') }}">History</a>
             <a href="{{ url_for('help') }}">Governance Framework</a>
         </div>
     </nav>
 
     <div class="container">
-        <div class="summary-stats">
-            <div class="stat-box alert-border">
-                <label>Total Off-Track Exposure</label>
-                <h2>${{ crit_val }}</h2>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <label>Total Tracks</label>
+                <div class="value">{{ portfolio|length }}</div>
             </div>
-            <div class="stat-box">
-                <label>Active Loan Tracks</label>
-                <h2>{{ portfolio|length }}</h2>
+            <div class="stat-card critical">
+                <label>Off-Track Exposure</label>
+                <div class="value">${{ crit_val }}</div>
             </div>
-            <div class="stat-box action-box">
-                <label>Document Intelligence</label>
-                <a href="{{ url_for('reader') }}" class="workflow-btn text-center">Ingest New Agreement</a>
+            <div class="stat-card">
+                <label>System Status</label>
+                <div class="value" style="color: #059669;">Active</div>
             </div>
         </div>
 
-        <table class="data-table">
-            <thead>
-                <tr>
-                    <th>Borrower & Loan Type</th>
-                    <th>Tracking Milestone</th>
-                    <th>Status</th>
-                    <th>Stakeholder Alert Path</th>
-                    <th>Management Action</th>
-                    <th>Oversight</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for loan in portfolio %}
-                <tr class="risk-{{ loan.risk.level.lower() }}">
-                    <td><strong>{{ loan.borrower }}</strong><br><small>{{ loan.loan_type }}</small></td>
-                    <td>{{ loan.track_milestone }}<br><small>Due: {{ loan.deadline }}</small></td>
-                    <td><span class="pill {{ loan.risk.level }}">{{ loan.risk.level }}</span></td>
-                    <td><strong>{{ loan.risk.path }}</strong></td>
-                    <td>
-                        <button class="workflow-btn" onclick="triggerWorkflow('{{ loan.risk.level }}')">
-                            {{ loan.risk.action }}
-                        </button>
-                    </td>
-                    <td class="action-cell">
-                        <a href="{{ url_for('history', loan_id=loan.id) }}" class="icon-link" title="View Track History">History</a>
-                        <button class="expand-btn" onclick="toggleDetails('{{ loan.id }}')">Info</button>
-                    </td>
-                </tr>
-                <tr id="details-{{ loan.id }}" class="drawer-row" style="display:none;">
-                    <td colspan="6">
-                        <div class="drawer-content">
-                            <div class="d-cell"><strong>Sector:</strong> {{ loan.sector }}</div>
-                            <div class="d-cell"><strong>Margin:</strong> {{ loan.margin }}</div>
-                            <div class="d-cell"><strong>Jurisdiction:</strong> {{ loan.jurisdiction }}</div>
-                            <div class="d-cell"><strong>Provision Summary:</strong> {{ loan.provision_summary }}</div>
-                        </div>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        <div class="header-section">
+            <h2>Active Governance Tracks</h2>
+            <p>Real-time monitoring of credit milestones and compliance obligations.</p>
+        </div>
+
+        <div class="table-container">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Borrower</th>
+                        <th>Facility</th>
+                        <th>Exposure</th>
+                        <th>Sector</th>
+                        <th>Tracking Milestone</th>
+                        <th>Status</th>
+                        <th>Escalation Path</th>
+                        <th>Next Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for loan in portfolio %}
+                    <tr class="clickable-row">
+                        <td><strong>{{ loan.borrower }}</strong><br><small>{{ loan.id }}</small></td>
+                        <td>{{ loan.loan_type }}</td>
+                        <td>${{ "{:,.0f}".format(loan.exposure) }}</td>
+                        <td>{{ loan.sector }}</td>
+                        <td>{{ loan.track_milestone }}</td>
+                        <td>
+                            <span class="pill status-{{ loan.risk.color }}">
+                                {{ loan.risk.level }}
+                            </span>
+                        </td>
+                        <td><small>{{ loan.risk.path }}</small></td>
+                        <td>
+                            <button class="action-btn">{{ loan.risk.action }}</button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
-    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+    <div class="floating-action">
+        <a href="{{ url_for('reader') }}" class="btn-ingest">+ Ingest New Document</a>
+    </div>
+
+    <footer class="footer-simple">
+        <p>&copy; 2025 Tralo Systems | Data Kept in Memory for Session</p>
+    </footer>
 </body>
 </html>
