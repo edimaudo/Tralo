@@ -3,45 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <title>Tralo | Dashboard</title>
+    <title>Tralo | Loan Obligation Monitoring System</title>
 </head>
 <body>
     <nav class="nav-header">
         <div class="logo-small">TRALO</div>
         <div class="nav-links">
-            <a href="{{ url_for('dashboard') }}">Home</a>
-            <a href="{{ url_for('help') }}">Governance Framework</a>
+            <a href="{{ url_for('index') }}">Home</a>
+            <a href="{{ url_for('help') }}">Governance</a>
         </div>
     </nav>
 
     <div class="container">
         <div class="summary-stats">
             <div class="stat-box alert-border">
-                <label>Total Critical Exposure</label>
+                <label>Total Off-Track Exposure</label>
                 <h2>${{ crit_val }}</h2>
             </div>
             <div class="stat-box">
-                <label>Facilities Monitored</label>
+                <label>Active Loan Tracks</label>
                 <h2>{{ portfolio|length }}</h2>
+            </div>
+            <div class="stat-box action-box">
+                <label>Document Intelligence</label>
+                <a href="{{ url_for('reader') }}" class="workflow-btn text-center">Ingest New Agreement</a>
             </div>
         </div>
 
         <table class="data-table">
             <thead>
                 <tr>
-                    <th>Borrower & Facility</th>
-                    <th>Obligation</th>
-                    <th>Risk Profile</th>
+                    <th>Borrower & Loan Type</th>
+                    <th>Tracking Milestone</th>
+                    <th>Status</th>
                     <th>Stakeholder Alert Path</th>
                     <th>Management Action</th>
-                    <th></th>
+                    <th>Oversight</th>
                 </tr>
             </thead>
             <tbody>
                 {% for loan in portfolio %}
                 <tr class="risk-{{ loan.risk.level.lower() }}">
-                    <td><strong>{{ loan.borrower }}</strong><br><small>{{ loan.facility }}</small></td>
-                    <td>{{ loan.obligation }}<br><small>Due: {{ loan.deadline }}</small></td>
+                    <td><strong>{{ loan.borrower }}</strong><br><small>{{ loan.loan_type }}</small></td>
+                    <td>{{ loan.track_milestone }}<br><small>Due: {{ loan.deadline }}</small></td>
                     <td><span class="pill {{ loan.risk.level }}">{{ loan.risk.level }}</span></td>
                     <td><strong>{{ loan.risk.path }}</strong></td>
                     <td>
@@ -49,7 +53,10 @@
                             {{ loan.risk.action }}
                         </button>
                     </td>
-                    <td><button class="expand-btn" onclick="toggleDetails('{{ loan.id }}')">Details</button></td>
+                    <td class="action-cell">
+                        <a href="{{ url_for('history', loan_id=loan.id) }}" class="icon-link" title="View Track History">History</a>
+                        <button class="expand-btn" onclick="toggleDetails('{{ loan.id }}')">Info</button>
+                    </td>
                 </tr>
                 <tr id="details-{{ loan.id }}" class="drawer-row" style="display:none;">
                     <td colspan="6">
