@@ -34,15 +34,13 @@
                 {% for entry in history %}
                 <tr>
                     <td>
-                        {# Assigning variable dates based on loop index to match 2025-2026 timeline #}
-                        {% if loop.index % 4 == 0 %}
-                            Dec {{ 10 + loop.index }}, 2025
-                        {% elif loop.index % 3 == 0 %}
-                            Nov {{ 05 + loop.index }}, 2025
+                        {# Matching the specific date logic used in app.html timeline for consistency #}
+                        {% if loop.index % 3 == 0 %}
+                            Nov 28, 2025
                         {% elif loop.index % 2 == 0 %}
-                            Jan {{ 02 + loop.index }}, 2026
+                            Oct 15, 2025
                         {% else %}
-                            Oct {{ 20 + loop.index }}, 2025
+                            Jan 04, 2026
                         {% endif %}
                     </td>
                     <td><strong>{{ entry.borrower }}</strong></td>
