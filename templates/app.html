@@ -3,15 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tralo | Dashboard</title>
+    <title>Tralo | Monitor</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script>
+        function toggleDetails(id) {
+            const detailRow = document.getElementById('details-' + id);
+            if (detailRow.style.display === 'none') {
+                detailRow.style.display = 'table-row';
+            } else {
+                detailRow.style.display = 'none';
+            }
+        }
+    </script>
 </head>
 <body>
     <nav class="nav-header">
         <div class="logo">TRALO</div>
         <div class="nav-links">
             <a href="{{ url_for('index') }}">Home</a>
-            <a href="{{ url_for('dashboard') }}" class="active">Dashboard</a>
+            <a href="{{ url_for('dashboard') }}" class="active">Monitor</a>
             <a href="{{ url_for('history') }}">History</a>
         </div>
     </nav>
@@ -46,6 +56,7 @@
                     <th>Exposure</th>
                     <th>Milestone</th>
                     <th>Status</th>
+                    <th>Details</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -60,7 +71,6 @@
                     <td>${{ "{:,.0f}".format(loan.exposure) }}</td>
                     <td>{{ loan.track_milestone }}</td>
                     <td>
-                        {# Mapping logic to match style.css classes #}
                         {% set status_class = 'STABLE' %}
                         {% if loan.risk.level == 'OFF-TRACK' %}{% set status_class = 'CRITICAL' %}
                         {% elif loan.risk.level == 'AT-RISK' %}{% set status_class = 'HIGH' %}{% endif %}
@@ -70,7 +80,32 @@
                         </span>
                     </td>
                     <td>
+                        <button class="expand-btn" onclick="toggleDetails('{{ loop.index }}')">View Trail</button>
+                    </td>
+                    <td>
                         <button class="workflow-btn">{{ loan.risk.action }}</button>
+                    </td>
+                </tr>
+                <!-- Hidden Detail Row -->
+                <tr id="details-{{ loop.index }}" style="display: none; background: #fafafa;">
+                    <td colspan="7">
+                        <div style="padding: 20px 40px;">
+                            <h4 style="margin-top: 0; color: var(--navy);">Compliance Timeline: {{ loan.borrower }}</h4>
+                            <div class="timeline">
+                                <div class="timeline-item">
+                                    <strong>Last Reporting Package</strong><br>
+                                    <small>Received Jan 12, 2025 - Verified via OCR</small>
+                                </div>
+                                <div class="timeline-item">
+                                    <strong>Financial Covenant Check</strong><br>
+                                    <small>Debt/EBITDA maintained at 3.2x (Limit 4.0x)</small>
+                                </div>
+                                <div class="timeline-item">
+                                    <strong>Current Tracking: {{ loan.track_milestone }}</strong><br>
+                                    <small>Status: {{ loan.risk.level }} - Next Action: {{ loan.risk.action }}</small>
+                                </div>
+                            </div>
+                        </div>
                     </td>
                 </tr>
                 {% endfor %}
