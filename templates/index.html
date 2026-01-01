@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <title>Tralo | Credit Portfolio Monitor</title>
+    <title>Tralo | Loan Obligation Monitoring System</title>
 </head>
 <body class="landing-page">
-    <div class="hero">
-        <div class="logo">TRALO</div>
-        <h1>Credit Portfolio & Obligation Monitor</h1>
-        <p>Advanced governance and oversight for institutional debt facilities.</p>
-        <div class="cta">
-            <a href="/dashboard" class="btn-main">Access Portfolio Monitor</a>
-            <a href="/help" class="btn-sub">Governance Framework</a>
+    <div class="hero-container">
+        <div class="brand-logo">TRALO</div>
+        <h1 class="main-title">Loan Obligation Monitoring System</h1>
+        <p class="main-subtitle">Decision-support tool for credit risk and finance professionals to manage complex loan obligations.</p>
+        <div class="button-row">
+            <a href="{{ url_for('dashboard') }}" class="btn-filled">Access Portfolio Monitor</a>
+            <a href="{{ url_for('help') }}" class="btn-ghost">Governance Framework</a>
         </div>
     </div>
 </body>
