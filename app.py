@@ -4,7 +4,8 @@ from flask import Flask, render_template, url_for, redirect, request
 
 app = Flask(__name__)
 
-# GLOBAL PORTFOLIO: Restored with all 7 logical data points
+# --- GLOBAL PORTFOLIO DATA ---
+# This list is kept in memory. Data added via Reader will persist until the server restarts.
 portfolio_data = [
     {"id": "LN-101", "borrower": "Precision Mfg Ltd", "loan_type": "Term Loan A", "exposure": 450000000, "jurisdiction": "UK", "track_milestone": "Annual Audited Accounts", "deadline": (datetime.now() - timedelta(days=2)).strftime('%Y-%m-%d'), "status": "Overdue", "rm": "Alice Sterling", "cro": "Robert Vance", "margin": "2.25%", "sector": "Manufacturing", "provision_summary": "Net Debt/EBITDA < 3.5x"},
     {"id": "LN-202", "borrower": "Pacific Infra Group", "loan_type": "Project Finance", "exposure": 1100000000, "jurisdiction": "US", "track_milestone": "Quarterly Progress Report", "deadline": (datetime.now() + timedelta(days=1)).strftime('%Y-%m-%d'), "status": "Pending", "rm": "Markus Thorne", "cro": "Robert Vance", "margin": "3.10%", "sector": "Infrastructure", "provision_summary": "DSCR > 1.20x"},
@@ -20,12 +21,14 @@ def analyze_track_status(loan):
         deadline = datetime.strptime(loan['deadline'], '%Y-%m-%d')
         days_left = (deadline - datetime.now()).days
         if loan['status'] == "Overdue":
-            return {"level": "OFF-TRACK", "path": f"{loan.get('cro', 'CRO')}", "action": "Remediation Required"}
+            return {"level": "OFF-TRACK", "path": f"{loan.get('cro', 'CRO')}", "action": "Remediation Plan Required"}
         elif days_left <= 2:
-            return {"level": "AT-RISK", "path": f"{loan.get('rm', 'RM')}", "action": "Urgent Nudge"}
-        return {"level": "ON-TRACK", "path": "Monitor", "action": "Log Milestone"}
+            return {"level": "AT-RISK", "path": f"{loan.get('rm', 'RM')}", "action": "Urgent Compliance Nudge"}
+        return {"level": "ON-TRACK", "path": "Internal Monitor", "action": "Log Milestone"}
     except:
-        return {"level": "ON-TRACK", "path": "N/A", "action": "Review"}
+        return {"level": "ON-TRACK", "path": "System", "action": "Review Data"}
+
+# --- ROUTE HANDLERS ---
 
 @app.route('/')
 def index():
@@ -42,10 +45,15 @@ def dashboard():
     formatted_val = "{:,.0f}".format(total_off_track)
     return render_template('app.html', portfolio=portfolio_data, crit_val=formatted_val)
 
+@app.route('/help')
+def help():
+    return render_template('help.html')
+
 @app.route('/reader')
 def reader():
+    # Dynamic Simulation for the Reader
     borrowers = ["Alpha Robotics", "Summit Grid", "Vertex Shipping", "Brio Water"]
-    sectors = ["Technology", "Infrastructure", "Transportation", "Utilities"]
+    sectors = ["Manufacturing", "Infrastructure", "Transportation", "Utilities"]
     idx = random.randint(0, 3)
     
     extracted_loan = {
