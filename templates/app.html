@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tralo | Monitor</title>
+    <title>Tralo | Dashboard</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <script>
         function toggleDetails(id) {
@@ -21,7 +21,7 @@
         <div class="logo">TRALO</div>
         <div class="nav-links">
             <a href="{{ url_for('index') }}">Home</a>
-            <a href="{{ url_for('dashboard') }}" class="active">Monitor</a>
+            <a href="{{ url_for('dashboard') }}" class="active">Dashboard</a>
             <a href="{{ url_for('history') }}">History</a>
         </div>
     </nav>
@@ -41,6 +41,9 @@
                 <label>System Status</label>
                 <span class="stat-val" style="color: #059669;">Live</span>
             </div>
+            <div style="margin-top: 30px;">
+                <a href="{{ url_for('reader') }}" style="color: var(--accent); text-decoration: none; font-weight: 700;">+ Ingest Document</a>
+            </div>  
         </div>
 
         <div style="margin-bottom: 25px;">
@@ -123,9 +126,7 @@
             </tbody>
         </table>
 
-        <div style="margin-top: 30px;">
-            <a href="{{ url_for('reader') }}" style="color: var(--accent); text-decoration: none; font-weight: 700;">+ Ingest Document</a>
-        </div>
+
     </div>
 </body>
 </html>
