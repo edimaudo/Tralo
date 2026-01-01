@@ -4,8 +4,7 @@ from flask import Flask, render_template, url_for, redirect, request
 
 app = Flask(__name__)
 
-# --- GLOBAL PORTFOLIO DATA ---
-# This list is kept in memory. Data added via Reader will persist until the server restarts.
+# --- MASTER PORTFOLIO DATA (7 ENTRIES) ---
 portfolio_data = [
     {"id": "LN-101", "borrower": "Precision Mfg Ltd", "loan_type": "Term Loan A", "exposure": 450000000, "jurisdiction": "UK", "track_milestone": "Annual Audited Accounts", "deadline": (datetime.now() - timedelta(days=2)).strftime('%Y-%m-%d'), "status": "Overdue", "rm": "Alice Sterling", "cro": "Robert Vance", "margin": "2.25%", "sector": "Manufacturing", "provision_summary": "Net Debt/EBITDA < 3.5x"},
     {"id": "LN-202", "borrower": "Pacific Infra Group", "loan_type": "Project Finance", "exposure": 1100000000, "jurisdiction": "US", "track_milestone": "Quarterly Progress Report", "deadline": (datetime.now() + timedelta(days=1)).strftime('%Y-%m-%d'), "status": "Pending", "rm": "Markus Thorne", "cro": "Robert Vance", "margin": "3.10%", "sector": "Infrastructure", "provision_summary": "DSCR > 1.20x"},
@@ -16,36 +15,30 @@ portfolio_data = [
     {"id": "LN-707", "borrower": "CloudScale Systems", "loan_type": "Venture Debt", "exposure": 200000000, "jurisdiction": "US", "track_milestone": "Series D Funding Proof", "deadline": (datetime.now() - timedelta(days=5)).strftime('%Y-%m-%d'), "status": "Overdue", "rm": "Markus Thorne", "cro": "Sarah Jenkins", "margin": "6.50%", "sector": "Technology", "provision_summary": "Runway > 12 Months"}
 ]
 
-def analyze_track_status(loan):
-    try:
-        deadline = datetime.strptime(loan['deadline'], '%Y-%m-%d')
-        days_left = (deadline - datetime.now()).days
-        if loan['status'] == "Overdue":
-            return {"level": "OFF-TRACK", "path": f"{loan.get('cro', 'CRO')}", "action": "Remediation Plan Required"}
-        elif days_left <= 2:
-            return {"level": "AT-RISK", "path": f"{loan.get('rm', 'RM')}", "action": "Urgent Compliance Nudge"}
-        return {"level": "ON-TRACK", "path": "Internal Monitor", "action": "Log Milestone"}
-    except:
-        return {"level": "ON-TRACK", "path": "System", "action": "Review Data"}
+# --- SYNCHRONIZED HISTORY LOGS ---
+# Automatically populating history with an initialization event for every portfolio item
+history_logs = []
+for loan in portfolio_data:
+    history_logs.append({
+        "loan_id": loan['id'],
+        "borrower": loan['borrower'],
+        "date": "2025-12-01", # Standard start-of-month initialization
+        "event": "Governance Track Initialized",
+        "status": "ON-TRACK" if loan['status'] != "Overdue" else "OFF-TRACK"
+    })
 
-# --- ROUTE HANDLERS ---
+def analyze_track_status(loan):
+    deadline = datetime.strptime(loan['deadline'], '%Y-%m-%d')
+    days_left = (deadline - datetime.now()).days
+    if loan['status'] == "Overdue":
+        return {"level": "OFF-TRACK", "color": "danger"}
+    elif days_left <= 2:
+        return {"level": "AT-RISK", "color": "warning"}
+    return {"level": "ON-TRACK", "color": "success"}
 
 @app.route('/')
 def index():
     return render_template('index.html')
-
-# Add this route handler
-@app.route('/history/<loan_id>')
-def history(loan_id):
-    # Filter logs for the specific loan
-    loan_history = [h for h in history_logs if h['loan_id'] == loan_id]
-    # Find the loan details to show the borrower name
-    loan = next((item for item in portfolio_data if item["id"] == loan_id), None)
-    
-    if not loan:
-        return "Loan not found", 404
-        
-    return render_template('history.html', history=loan_history, loan=loan)
 
 @app.route('/dashboard')
 def dashboard():
@@ -53,34 +46,12 @@ def dashboard():
     for loan in portfolio_data:
         loan['risk'] = analyze_track_status(loan)
         if loan['risk']['level'] == "OFF-TRACK":
-            total_off_track += loan.get('exposure', 0)
-    
-    formatted_val = "{:,.0f}".format(total_off_track)
-    return render_template('app.html', portfolio=portfolio_data, crit_val=formatted_val)
+            total_off_track += loan['exposure']
+    return render_template('app.html', portfolio=portfolio_data, crit_val="{:,.0f}".format(total_off_track))
 
-@app.route('/help')
-def help():
-    return render_template('help.html')
-
-@app.route('/reader')
-def reader():
-    # Dynamic Simulation for the Reader
-    borrowers = ["Alpha Robotics", "Summit Grid", "Vertex Shipping", "Brio Water"]
-    sectors = ["Manufacturing", "Infrastructure", "Transportation", "Utilities"]
-    idx = random.randint(0, 3)
-    
-    extracted_loan = {
-        "borrower": borrowers[idx],
-        "sector": sectors[idx],
-        "jurisdiction": random.choice(["US", "UK", "Germany"]),
-        "loan_type": "Bridge Facility",
-        "exposure": random.randint(100, 500) * 1000000,
-        "margin": "4.25%",
-        "track_milestone": "Compliance Certificate",
-        "provision_summary": "Leverage < 3.0x",
-        "deadline": (datetime.now() + timedelta(days=20)).strftime('%Y-%m-%d')
-    }
-    return render_template('reader.html', loan=extracted_loan)
+@app.route('/history')
+def history():
+    return render_template('history.html', history=history_logs)
 
 @app.route('/add_loan', methods=['POST'])
 def add_loan():
@@ -93,14 +64,41 @@ def add_loan():
         "track_milestone": request.form.get('track_milestone'),
         "deadline": request.form.get('deadline'),
         "status": "Submitted",
-        "rm": "Auto-RM",
-        "cro": "Auto-CRO",
         "margin": request.form.get('margin'),
         "sector": request.form.get('sector'),
         "provision_summary": request.form.get('provision_summary')
     }
+    # Add to both lists simultaneously to maintain parity
     portfolio_data.append(new_loan)
+    history_logs.insert(0, {
+        "loan_id": new_loan['id'], 
+        "borrower": new_loan['borrower'], 
+        "date": datetime.now().strftime('%Y-%m-%d'), 
+        "event": "New Track Ingested via OCR", 
+        "status": "ON-TRACK"
+    })
     return redirect(url_for('dashboard'))
+
+@app.route('/reader')
+def reader():
+    borrowers = ["Alpha Robotics", "Summit Grid", "Vertex Shipping", "Brio Water"]
+    idx = random.randint(0, 3)
+    extracted_loan = {
+        "borrower": borrowers[idx],
+        "sector": "Industrial",
+        "jurisdiction": "US",
+        "loan_type": "Term Loan",
+        "exposure": random.randint(100, 500) * 1000000,
+        "margin": "4.25%",
+        "track_milestone": "Quarterly Compliance Cert",
+        "provision_summary": "Leverage < 3.25x",
+        "deadline": (datetime.now() + timedelta(days=20)).strftime('%Y-%m-%d')
+    }
+    return render_template('reader.html', loan=extracted_loan)
+
+@app.route('/help')
+def help():
+    return render_template('help.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
