@@ -94,15 +94,26 @@
                             <div class="timeline">
                                 <div class="timeline-item">
                                     <strong>Last Reporting Package</strong><br>
-                                    <small>Received Jan 12, 2025 - Verified via OCR</small>
+                                    {# Logic to create varying dates based on loop index #}
+                                    {% if loop.index % 3 == 0 %}
+                                        <small>Received Nov 28, 2025 - Verified via OCR</small>
+                                    {% elif loop.index % 2 == 0 %}
+                                        <small>Received Oct 15, 2025 - Verified via OCR</small>
+                                    {% else %}
+                                        <small>Received Jan 04, 2026 - Verified via OCR</small>
+                                    {% endif %}
                                 </div>
                                 <div class="timeline-item">
                                     <strong>Financial Covenant Check</strong><br>
-                                    <small>Debt/EBITDA maintained at 3.2x (Limit 4.0x)</small>
+                                    {% if loop.index % 2 == 0 %}
+                                        <small>Review Date: Dec 12, 2025 - Compliance Met</small>
+                                    {% else %}
+                                        <small>Review Date: Jan 10, 2026 - Compliance Met</small>
+                                    {% endif %}
                                 </div>
                                 <div class="timeline-item">
                                     <strong>Current Tracking: {{ loan.track_milestone }}</strong><br>
-                                    <small>Status: {{ loan.risk.level }} - Next Action: {{ loan.risk.action }}</small>
+                                    <small>Last Update: Jan {{ 15 + loop.index }}, 2026 - Status: {{ loan.risk.level }}</small>
                                 </div>
                             </div>
                         </div>
