@@ -2,35 +2,51 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tralo | History</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <title>Tralo | Milestone History</title>
 </head>
 <body>
     <nav class="nav-header">
-        <div class="logo-small">TRALO</div>
-        <div class="nav-links"><a href="{{ url_for('dashboard') }}">Back to Dashboard</a></div>
+        <div class="logo">TRALO</div>
+        <div class="nav-links">
+            <a href="{{ url_for('index') }}">Home</a>
+            <a href="{{ url_for('dashboard') }}">Monitor</a>
+            <a href="{{ url_for('history') }}" class="active">History</a>
+        </div>
     </nav>
+
     <div class="container">
-        <h1>Global Milestone History</h1>
+        <h2>Governance History</h2>
+        <p style="color: #64748b; margin-bottom: 30px;">Historical audit trail of milestone completions and escalations.</p>
+
         <table class="data-table">
             <thead>
                 <tr>
                     <th>Date</th>
                     <th>Borrower</th>
                     <th>Event</th>
-                    <th>Status</th>
+                    <th>Status at Event</th>
+                    <th>Outcome</th>
                 </tr>
             </thead>
             <tbody>
                 {% for entry in history %}
                 <tr>
                     <td>{{ entry.date }}</td>
-                    <td><strong>{{ entry.borrower }}</strong><br><small>{{ entry.loan_id }}</small></td>
+                    <td><strong>{{ entry.borrower }}</strong></td>
                     <td>{{ entry.event }}</td>
                     <td>
-                        {% set color = 'danger' if entry.status == 'OFF-TRACK' else 'success' %}
-                        <span class="pill status-{{ color }}">{{ entry.status }}</span>
+                        {# Mapping logic to match style.css classes #}
+                        {% set status_class = 'STABLE' %}
+                        {% if entry.status == 'OFF-TRACK' %}{% set status_class = 'CRITICAL' %}
+                        {% elif entry.status == 'AT-RISK' %}{% set status_class = 'HIGH' %}{% endif %}
+                        
+                        <span class="pill {{ status_class }}">
+                            {{ entry.status }}
+                        </span>
                     </td>
+                    <td>{{ entry.outcome }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
