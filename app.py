@@ -17,6 +17,13 @@ portfolio_data = [
         "deadline": (datetime.now() + timedelta(days=1)).strftime('%Y-%m-%d'),
         "status": "Pending", "rm": "Markus Thorne", "cro": "Robert Vance",
         "margin": "4.25%", "sector": "Energy", "provision_summary": "Min Liquidity $50M; Senior Leverage < 2.5x"
+    },
+    {
+        "id": "FAC-994", "borrower": "Nordic Pharma", "facility": "GBP 150M Capex Facility",
+        "exposure": 150000000, "jurisdiction": "UK", "obligation": "Compliance Certificate",
+        "deadline": (datetime.now() + timedelta(days=15)).strftime('%Y-%m-%d'),
+        "status": "Submitted", "rm": "James Chen", "cro": "Sarah Jenkins",
+        "margin": "2.75%", "sector": "Healthcare", "provision_summary": "Clean Down Period: 15 Days; R&D Spend > 10%"
     }
 ]
 
@@ -41,7 +48,6 @@ def dashboard():
         if loan['risk']['level'] == "CRITICAL":
             total_crit += loan['exposure']
     
-    # Financial formatting: Adds commas and handles large-scale numbers
     formatted_crit = "{:,.0f}".format(total_crit)
     return render_template('app.html', portfolio=portfolio_data, crit_val=formatted_crit)
 
