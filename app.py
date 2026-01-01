@@ -4,7 +4,7 @@ from flask import Flask, render_template, url_for, redirect, request
 
 app = Flask(__name__)
 
-# --- MASTER PORTFOLIO DATA (7 ENTRIES) ---
+# --- CORRECT MASTER PORTFOLIO DATA ---
 portfolio_data = [
     {"id": "LN-101", "borrower": "Precision Mfg Ltd", "loan_type": "Term Loan A", "exposure": 450000000, "jurisdiction": "UK", "track_milestone": "Annual Audited Accounts", "deadline": (datetime.now() - timedelta(days=2)).strftime('%Y-%m-%d'), "status": "Overdue", "rm": "Alice Sterling", "cro": "Robert Vance", "margin": "2.25%", "sector": "Manufacturing", "provision_summary": "Net Debt/EBITDA < 3.5x"},
     {"id": "LN-202", "borrower": "Pacific Infra Group", "loan_type": "Project Finance", "exposure": 1100000000, "jurisdiction": "US", "track_milestone": "Quarterly Progress Report", "deadline": (datetime.now() + timedelta(days=1)).strftime('%Y-%m-%d'), "status": "Pending", "rm": "Markus Thorne", "cro": "Robert Vance", "margin": "3.10%", "sector": "Infrastructure", "provision_summary": "DSCR > 1.20x"},
@@ -15,30 +15,28 @@ portfolio_data = [
     {"id": "LN-707", "borrower": "CloudScale Systems", "loan_type": "Venture Debt", "exposure": 200000000, "jurisdiction": "US", "track_milestone": "Series D Funding Proof", "deadline": (datetime.now() - timedelta(days=5)).strftime('%Y-%m-%d'), "status": "Overdue", "rm": "Markus Thorne", "cro": "Sarah Jenkins", "margin": "6.50%", "sector": "Technology", "provision_summary": "Runway > 12 Months"}
 ]
 
-# --- SYNCHRONIZED HISTORY LOGS ---
-# Automatically populating history with an initialization event for every portfolio item
+# --- SYNCHRONIZED HISTORY (Populated from Portfolio) ---
 history_logs = []
 for loan in portfolio_data:
     history_logs.append({
         "loan_id": loan['id'],
         "borrower": loan['borrower'],
-        "date": "2025-12-01", # Standard start-of-month initialization
+        "date": "2025-12-01",
         "event": "Governance Track Initialized",
-        "status": "ON-TRACK" if loan['status'] != "Overdue" else "OFF-TRACK"
+        "status": "OFF-TRACK" if loan['status'] == "Overdue" else "ON-TRACK"
     })
 
 def analyze_track_status(loan):
     deadline = datetime.strptime(loan['deadline'], '%Y-%m-%d')
     days_left = (deadline - datetime.now()).days
     if loan['status'] == "Overdue":
-        return {"level": "OFF-TRACK", "color": "danger"}
+        return {"level": "OFF-TRACK", "color": "danger", "path": f"{loan['cro']} (CRO)", "action": "Remediate"}
     elif days_left <= 2:
-        return {"level": "AT-RISK", "color": "warning"}
-    return {"level": "ON-TRACK", "color": "success"}
+        return {"level": "AT-RISK", "color": "warning", "path": f"{loan['rm']} (RM)", "action": "Nudge"}
+    return {"level": "ON-TRACK", "color": "success", "path": "Monitor", "action": "Update"}
 
 @app.route('/')
-def index():
-    return render_template('index.html')
+def index(): return render_template('index.html')
 
 @app.route('/dashboard')
 def dashboard():
@@ -50,55 +48,32 @@ def dashboard():
     return render_template('app.html', portfolio=portfolio_data, crit_val="{:,.0f}".format(total_off_track))
 
 @app.route('/history')
-def history():
-    return render_template('history.html', history=history_logs)
+def history(): return render_template('history.html', history=history_logs)
+
+@app.route('/reader')
+def reader():
+    return render_template('reader.html', loan={
+        "borrower": "Vertex Global", "sector": "Logistics", "jurisdiction": "US",
+        "loan_type": "RCF", "exposure": 250000000, "margin": "2.25%",
+        "track_milestone": "Compliance Cert", "provision_summary": "LTV < 50%",
+        "deadline": (datetime.now() + timedelta(days=20)).strftime('%Y-%m-%d')
+    })
 
 @app.route('/add_loan', methods=['POST'])
 def add_loan():
     new_loan = {
-        "id": f"LN-{random.randint(800, 999)}",
-        "borrower": request.form.get('borrower'),
-        "loan_type": request.form.get('loan_type'),
-        "exposure": int(request.form.get('exposure', 0)),
-        "jurisdiction": request.form.get('jurisdiction'),
-        "track_milestone": request.form.get('track_milestone'),
-        "deadline": request.form.get('deadline'),
-        "status": "Submitted",
-        "margin": request.form.get('margin'),
-        "sector": request.form.get('sector'),
+        "id": f"LN-{random.randint(800, 999)}", "borrower": request.form.get('borrower'),
+        "loan_type": request.form.get('loan_type'), "exposure": int(request.form.get('exposure', 0)),
+        "jurisdiction": request.form.get('jurisdiction'), "track_milestone": request.form.get('track_milestone'),
+        "deadline": request.form.get('deadline'), "status": "Submitted",
+        "margin": request.form.get('margin'), "sector": request.form.get('sector'),
         "provision_summary": request.form.get('provision_summary')
     }
-    # Add to both lists simultaneously to maintain parity
     portfolio_data.append(new_loan)
-    history_logs.insert(0, {
-        "loan_id": new_loan['id'], 
-        "borrower": new_loan['borrower'], 
-        "date": datetime.now().strftime('%Y-%m-%d'), 
-        "event": "New Track Ingested via OCR", 
-        "status": "ON-TRACK"
-    })
+    history_logs.insert(0, {"loan_id": new_loan['id'], "borrower": new_loan['borrower'], "date": datetime.now().strftime('%Y-%m-%d'), "event": "Track Ingested via OCR", "status": "ON-TRACK"})
     return redirect(url_for('dashboard'))
 
-@app.route('/reader')
-def reader():
-    borrowers = ["Alpha Robotics", "Summit Grid", "Vertex Shipping", "Brio Water"]
-    idx = random.randint(0, 3)
-    extracted_loan = {
-        "borrower": borrowers[idx],
-        "sector": "Industrial",
-        "jurisdiction": "US",
-        "loan_type": "Term Loan",
-        "exposure": random.randint(100, 500) * 1000000,
-        "margin": "4.25%",
-        "track_milestone": "Quarterly Compliance Cert",
-        "provision_summary": "Leverage < 3.25x",
-        "deadline": (datetime.now() + timedelta(days=20)).strftime('%Y-%m-%d')
-    }
-    return render_template('reader.html', loan=extracted_loan)
-
 @app.route('/help')
-def help():
-    return render_template('help.html')
+def help(): return render_template('help.html')
 
-if __name__ == '__main__':
-    app.run(debug=True)
+if __name__ == '__main__': app.run(debug=True)
