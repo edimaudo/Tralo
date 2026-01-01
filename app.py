@@ -24,6 +24,34 @@ portfolio_data = [
         "deadline": (datetime.now() + timedelta(days=15)).strftime('%Y-%m-%d'),
         "status": "Submitted", "rm": "James Chen", "cro": "Sarah Jenkins",
         "margin": "2.75%", "sector": "Healthcare", "provision_summary": "Clean Down Period: 15 Days; R&D Spend > 10%"
+    },
+    {
+        "id": "FAC-442", "borrower": "CloudScale Systems", "facility": "USD 200M Venture Debt",
+        "exposure": 200000000, "jurisdiction": "US", "obligation": "Series D Funding Proof",
+        "deadline": (datetime.now() - timedelta(days=5)).strftime('%Y-%m-%d'),
+        "status": "Overdue", "rm": "Markus Thorne", "cro": "Sarah Jenkins",
+        "margin": "6.50%", "sector": "Technology", "provision_summary": "Runway > 12 Months; Minimum ARR $100M"
+    },
+    {
+        "id": "FAC-205", "borrower": "EuroRetail Holdings", "facility": "EUR 300M Inventory Line",
+        "exposure": 300000000, "jurisdiction": "Germany", "obligation": "Inventory Valuation Report",
+        "deadline": (datetime.now() + timedelta(days=20)).strftime('%Y-%m-%d'),
+        "status": "Submitted", "rm": "James Chen", "cro": "Robert Vance",
+        "margin": "2.10%", "sector": "Retail", "provision_summary": "Max Leverage 3.5x; No Change of Control"
+    },
+    {
+        "id": "FAC-771", "borrower": "Sterling Property REIT", "facility": "GBP 850M Dev Finance",
+        "exposure": 850000000, "jurisdiction": "UK", "obligation": "LTV Certificate",
+        "deadline": (datetime.now() + timedelta(hours=12)).strftime('%Y-%m-%d'),
+        "status": "Pending", "rm": "Alice Sterling", "cro": "Sarah Jenkins",
+        "margin": "3.80%", "sector": "Real Estate", "provision_summary": "LTV < 65%; Interest Reserve 12 Months"
+    },
+    {
+        "id": "FAC-339", "borrower": "Apex Mining Group", "facility": "AUD 750M Bridge Loan",
+        "exposure": 750000000, "jurisdiction": "Australia", "obligation": "Environmental Impact Audit",
+        "deadline": (datetime.now() + timedelta(days=3)).strftime('%Y-%m-%d'),
+        "status": "Pending", "rm": "Markus Thorne", "cro": "Robert Vance",
+        "margin": "5.25%", "sector": "Mining", "provision_summary": "Capex Sweep 50%; Min Ore Reserve 2M Tons"
     }
 ]
 
