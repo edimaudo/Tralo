@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <title>Milestone History | {{ loan.borrower }}</title>
+    <title>Tralo | Milestone History</title>
 </head>
 <body>
     <nav class="nav-header">
@@ -13,11 +13,11 @@
 
     <div class="container">
         <h1>Milestone Track History</h1>
-        <h3>{{ loan.borrower }} — {{ loan.id }}</h3>
+        <h3>Borrower: {{ loan.borrower }} ({{ loan.id }})</h3>
         
-        <div class="timeline">
+        <div class="timeline" style="margin-top: 30px; border-left: 2px solid #e2e8f0; padding-left: 20px;">
             {% for entry in history %}
-            <div class="timeline-item">
+            <div class="timeline-item" style="margin-bottom: 25px; position: relative;">
                 <div class="time-stamp"><strong>{{ entry.date }}</strong></div>
                 <div class="event-details">
                     <span class="pill {{ entry.status }}">{{ entry.status }}</span>
@@ -26,6 +26,9 @@
                 </div>
             </div>
             {% endfor %}
+            {% if not history %}
+                <p>No historical events logged for this track yet.</p>
+            {% endif %}
         </div>
     </div>
 </body>
