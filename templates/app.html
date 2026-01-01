@@ -1,87 +1,49 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <title>Tralo | Loan Obligation Monitoring System</title>
-</head>
-<body>
-    <nav class="nav-header">
-        <div class="logo-small">TRALO</div>
-        <div class="nav-links">
-            <a href="{{ url_for('index') }}">Home</a>
-            <a href="{{ url_for('dashboard') }}" class="active">Monitor</a>
-            <a href="{{ url_for('history') }}">History</a>
-            <a href="{{ url_for('help') }}">Governance Framework</a>
-        </div>
-    </nav>
+<nav class="nav-header">
+    <div class="logo-small">TRALO</div>
+    <div class="nav-links">
+        <a href="{{ url_for('index') }}">Home</a>
+        <a href="{{ url_for('dashboard') }}" class="active">Monitor</a>
+        <a href="{{ url_for('history') }}">History</a>
+        <a href="{{ url_for('help') }}">Governance</a>
+    </div>
+</nav>
 
-    <div class="container">
-        <div class="stats-grid">
-            <div class="stat-card">
-                <label>Total Tracks</label>
-                <div class="value">{{ portfolio|length }}</div>
-            </div>
-            <div class="stat-card critical">
-                <label>Off-Track Exposure</label>
-                <div class="value">${{ crit_val }}</div>
-            </div>
-            <div class="stat-card">
-                <label>System Status</label>
-                <div class="value" style="color: #059669;">Active</div>
-            </div>
+<div class="container">
+    <div class="stats-grid">
+        <div class="stat-card">
+            <label>Total Tracks</label>
+            <div class="value">{{ portfolio|length }}</div>
         </div>
-
-        <div class="header-section">
-            <h2>Active Governance Tracks</h2>
-            <p>Real-time monitoring of credit milestones and compliance obligations.</p>
-        </div>
-
-        <div class="table-container">
-            <table class="data-table">
-                <thead>
-                    <tr>
-                        <th>Borrower</th>
-                        <th>Facility</th>
-                        <th>Exposure</th>
-                        <th>Sector</th>
-                        <th>Tracking Milestone</th>
-                        <th>Status</th>
-                        <th>Escalation Path</th>
-                        <th>Next Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for loan in portfolio %}
-                    <tr class="clickable-row">
-                        <td><strong>{{ loan.borrower }}</strong><br><small>{{ loan.id }}</small></td>
-                        <td>{{ loan.loan_type }}</td>
-                        <td>${{ "{:,.0f}".format(loan.exposure) }}</td>
-                        <td>{{ loan.sector }}</td>
-                        <td>{{ loan.track_milestone }}</td>
-                        <td>
-                            <span class="pill status-{{ loan.risk.color }}">
-                                {{ loan.risk.level }}
-                            </span>
-                        </td>
-                        <td><small>{{ loan.risk.path }}</small></td>
-                        <td>
-                            <button class="action-btn">{{ loan.risk.action }}</button>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+        <div class="stat-card critical">
+            <label>Off-Track Exposure</label>
+            <div class="value">${{ crit_val }}</div>
         </div>
     </div>
 
-    <div class="floating-action">
-        <a href="{{ url_for('reader') }}" class="btn-ingest">+ Ingest New Document</a>
-    </div>
-
-    <footer class="footer-simple">
-        <p>&copy; 2025 Tralo Systems | Data Kept in Memory for Session</p>
-    </footer>
-</body>
-</html>
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Borrower</th>
+                <th>Exposure</th>
+                <th>Sector</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for loan in portfolio %}
+            <tr>
+                <td><strong>{{ loan.borrower }}</strong><br><small>{{ loan.id }}</small></td>
+                <td>${{ "{:,.0f}".format(loan.exposure) }}</td>
+                <td>{{ loan.sector }}</td>
+                <td>
+                    <span class="pill status-{{ loan.risk.color }}">
+                        {{ loan.risk.level }}
+                    </span>
+                </td>
+                <td><button class="action-btn">{{ loan.risk.action }}</button></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
