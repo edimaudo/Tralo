@@ -43,19 +43,24 @@
                             Jan 04, 2026
                         {% endif %}
                     </td>
-                    <td><strong>{{ entry.borrower }}</strong></td>
-                    <td>{{ entry.event }}</td>
+                    <td><strong>{{ entry.borrower | default('Unknown') }}</strong></td>
+                    <td>{{ entry.event | default('N/A') }}</td>
                     <td>
                         {# Mapping logic to match style.css classes #}
+                        {% set status_val = entry.status | default('STABLE') %}
                         {% set status_class = 'STABLE' %}
-                        {% if entry.status == 'OFF-TRACK' %}{% set status_class = 'CRITICAL' %}
-                        {% elif entry.status == 'AT-RISK' %}{% set status_class = 'HIGH' %}{% endif %}
+                        
+                        {% if status_val == 'OFF-TRACK' %}
+                            {% set status_class = 'CRITICAL' %}
+                        {% elif status_val == 'AT-RISK' %}
+                            {% set status_class = 'HIGH' %}
+                        {% endif %}
                         
                         <span class="pill {{ status_class }}">
-                            {{ entry.status }}
+                            {{ status_val }}
                         </span>
                     </td>
-                    <td>{{ entry.outcome }}</td>
+                    <td>{{ entry.outcome | default('Completed') }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
