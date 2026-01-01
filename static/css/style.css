@@ -49,3 +49,13 @@ body { font-family: 'Inter', system-ui, sans-serif; background: #f8fafc; margin:
 
 .help-wrapper { max-width: 850px; margin: 60px auto; padding: 20px; }
 .help-card { background: white; padding: 35px; border-radius: 12px; border: 1px solid var(--border); }
+
+ /* Timeline Styles */
+ .timeline { margin-top: 30px; border-left: 2px solid var(--border); padding-left: 20px; }
+ .timeline-item { margin-bottom: 25px; position: relative; }
+ .timeline-item::before { content: ""; position: absolute; left: -26px; top: 5px; width: 10px; height: 10px; background: var(--accent); border-radius: 50%; }
+
+ /* Reader Styles */
+ .reader-split { display: grid; grid-template-columns: 1fr 1.5fr; gap: 30px; margin-top: 20px; }
+ .dummy-pdf { background: #fff; padding: 40px; border: 1px solid #ccc; height: 400px; font-family: serif; color: #555; overflow-y: scroll; box-shadow: inset 0 0 10px rgba(0,0,0,0.05); }
+ .doc-preview h3 { color: #64748b; font-size: 0.9rem; }
