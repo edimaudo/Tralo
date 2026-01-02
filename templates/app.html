@@ -107,9 +107,6 @@
                         <button class="expand-btn" onclick="toggleDetails('{{ loop.index }}')">View</button>
                     </td>
                     <td><button class="workflow-btn" onclick="triggerAction('{{ loan.risk.action }}', '{{ loan.borrower }}')">{{ loan.risk.action }}</button></td>
-                    <td>
-                        <button class="workflow-btn">{{ loan.risk.action }}</button>
-                    </td>
                 </tr>
                 <!-- Hidden Detail Row -->
                 <tr id="details-{{ loop.index }}" style="display: none; background: #fafafa;">
