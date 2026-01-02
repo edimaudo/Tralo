@@ -23,7 +23,22 @@ function confirmDispatch() {
     closeAlert();
 }
 
-
+   function triggerAction(actionName, borrower) {
+            const message = `Workflow Initiated: ${actionName} for ${borrower}.`;
+            const toast = document.createElement('div');
+            toast.style.position = 'fixed';
+            toast.style.bottom = '20px';
+            toast.style.right = '20px';
+            toast.style.background = 'var(--navy)';
+            toast.style.color = 'white';
+            toast.style.padding = '15px 25px';
+            toast.style.borderRadius = '4px';
+            toast.style.boxShadow = '0 4px 12px rgba(0,0,0,0.2)';
+            toast.style.zIndex = '1000';
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
 
 
 
