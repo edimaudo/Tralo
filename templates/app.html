@@ -41,9 +41,13 @@
                 <label>System Status</label>
                 <span class="stat-val" style="color: #059669;">Live</span>
             </div>
-            <div style="margin-top: 30px;">
-                <a href="{{ url_for('reader') }}" style="color: var(--accent); text-decoration: none; font-weight: 700;">+ Ingest Document</a>
-            </div>  
+             
+             <a href="{{ url_for('reader') }}" style="text-decoration: none; flex: 1;">
+                <div class="stat-box" style="border-top-color: var(--accent); transition: 0.2s; cursor: pointer;">
+                    <label>Action Center</label>
+                    <span class="stat-val" style="color: var(--accent);">+ Ingest Document</span>
+                </div>
+            </a>
         </div>
 
         <div style="margin-bottom: 25px;">
