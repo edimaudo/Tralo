@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <title>Tralo | Help & Framework</title>
+    <title>Tralo | Help</title>
 </head>
 <body>
     <nav class="nav-header">
@@ -11,15 +11,61 @@
         <div class="nav-links"><a href="{{ url_for('dashboard') }}">Back to Dashboard</a></div>
     </nav>
 
-    <div class="help-wrapper">
+    <div class="help-wrapper" style="max-width: 900px; margin: 0 auto; padding: 40px 20px;">
         <h1>Governance Framework</h1>
-        <p class="intro-text">Tralo bridges the gap between static facility agreements and operational compliance.</p>
+        <p class="intro-text" style="font-size: 1.1rem; color: #64748b; margin-bottom: 40px;">Tralo bridges the gap between static facility agreements and operational compliance through automated document intelligence and risk monitoring.</p>
         
-        <div class="help-card">
-            <h3>Decision Support Logic</h3>
-            <p><strong>Risk Analysis:</strong> Obligations are prioritized by "Time-to-Default," with automated status shifts as deadlines approach.</p>
-            <p><strong>Stakeholder Routing:</strong> The system automatically assigns management actions to Relationship Managers (RM) for upcoming tasks and Credit Risk Officers (CRO) for breaches.</p>
-            <p><strong>Exposure Valuation:</strong> Real-time aggregation of capital linked to overdue facilities (Technical Breach).</p>
+        <div class="help-section" style="margin-bottom: 50px;">
+            <h2 style="border-bottom: 2px solid var(--navy); padding-bottom: 10px; margin-bottom: 20px;">How it Works</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+                <div class="help-card" style="background: white; padding: 20px; border-radius: 8px; border: 1px solid var(--border);">
+                    <div style="font-weight: 800; color: var(--navy); margin-bottom: 10px;">1. Ingestion</div>
+                    <p style="font-size: 0.9rem; margin: 0;">Upload credit agreements in PDF format. The AI engine extracts key entities like Borrowers, Exposure, and specific Covenants.</p>
+                </div>
+                <div class="help-card" style="background: white; padding: 20px; border-radius: 8px; border: 1px solid var(--border);">
+                    <div style="font-weight: 800; color: var(--navy); margin-bottom: 10px;">2. Monitoring</div>
+                    <p style="font-size: 0.9rem; margin: 0;">Once confirmed, the facility enters the Dashboard. Our logic tracks the time remaining until the next compliance milestone.</p>
+                </div>
+                <div class="help-card" style="background: white; padding: 20px; border-radius: 8px; border: 1px solid var(--border);">
+                    <div style="font-weight: 800; color: var(--navy); margin-bottom: 10px;">3. Mitigation</div>
+                    <p style="font-size: 0.9rem; margin: 0;">As risk levels shift (Stable to Critical), the system suggests specific workflows like drafting notices or scheduling reviews.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="help-section" style="margin-bottom: 50px;">
+            <h2 style="border-bottom: 2px solid var(--navy); padding-bottom: 10px; margin-bottom: 20px;">Decision Support Logic</h2>
+            <div class="help-card" style="background: #f8fafc; padding: 25px; border-radius: 8px; border-left: 5px solid var(--navy);">
+                <p><strong>Risk Analysis:</strong> Obligations are prioritized by "Time-to-Default," with automated status shifts as deadlines approach.</p>
+                <p><strong>Stakeholder Routing:</strong> The system automatically assigns management actions to Relationship Managers (RM) for upcoming tasks and Credit Risk Officers (CRO) for breaches.</p>
+                <p><strong>Exposure Valuation:</strong> Real-time aggregation of capital linked to overdue facilities (Technical Breach).</p>
+            </div>
+        </div>
+
+        <div class="help-section">
+            <h2 style="border-bottom: 2px solid var(--navy); padding-bottom: 10px; margin-bottom: 20px;">Glossary of Terms</h2>
+            <div style="background: white; border: 1px solid var(--border); border-radius: 8px; overflow: hidden;">
+                <div style="padding: 15px 20px; border-bottom: 1px solid var(--border); display: grid; grid-template-columns: 200px 1fr;">
+                    <span style="font-weight: 700; color: var(--navy);">Facility Type</span>
+                    <span style="font-size: 0.9rem;">The specific structure of the loan (e.g., Term Loan B, Revolving Credit Facility).</span>
+                </div>
+                <div style="padding: 15px 20px; border-bottom: 1px solid var(--border); display: grid; grid-template-columns: 200px 1fr; background: #fcfcfc;">
+                    <span style="font-weight: 700; color: var(--navy);">Exposure</span>
+                    <span style="font-size: 0.9rem;">The total dollar value of the bank's capital at risk for a specific borrower.</span>
+                </div>
+                <div style="padding: 15px 20px; border-bottom: 1px solid var(--border); display: grid; grid-template-columns: 200px 1fr;">
+                    <span style="font-weight: 700; color: var(--navy);">Governing Milestone</span>
+                    <span style="font-size: 0.9rem;">The next critical deadline for compliance, such as a financial covenant test or reporting date.</span>
+                </div>
+                <div style="padding: 15px 20px; border-bottom: 1px solid var(--border); display: grid; grid-template-columns: 200px 1fr; background: #fcfcfc;">
+                    <span style="font-weight: 700; color: var(--navy);">Technical Breach</span>
+                    <span style="font-size: 0.9rem;">A violation of a loan covenant that is not a payment default, often triggering a "Critical" status.</span>
+                </div>
+                <div style="padding: 15px 20px; display: grid; grid-template-columns: 200px 1fr;">
+                    <span style="font-weight: 700; color: var(--navy);">OCR Active</span>
+                    <span style="font-size: 0.9rem;">Indicates that Optical Character Recognition is currently processing the legal text of an uploaded PDF.</span>
+                </div>
+            </div>
         </div>
     </div>
 </body>
