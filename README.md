@@ -1,7 +1,7 @@
 # Tralo | Loan Obligation Monitoring System
 
 ## Overview
-Tralo is a decision-support tool designed for credit risk and finance professionals to manage complex loan obligations. It bridges the gap between static facility agreements and operational compliance.
+Tralo is a montioring system for loan obligations. It bridges the gap between static loan agreements and operational compliance.
 
 ## App Design
 - **Risk Analysis:** Automated prioritization based on "Time-to-Default."
