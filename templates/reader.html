@@ -5,6 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <title>Tralo | Document Intelligence</title>
+    <script>
+        function checkValidation() {
+            const checks = document.querySelectorAll('.validator-checkbox');
+            const submitBtn = document.getElementById('submit-btn');
+            const hiddenInput = document.getElementById('validation-input');
+            
+            const allChecked = Array.from(checks).every(c => c.checked);
+            
+            if (allChecked) {
+                submitBtn.disabled = false;
+                submitBtn.style.opacity = '1';
+                submitBtn.style.cursor = 'pointer';
+                hiddenInput.value = 'true';
+            } else {
+                submitBtn.disabled = true;
+                submitBtn.style.opacity = '0.5';
+                submitBtn.style.cursor = 'not-allowed';
+                hiddenInput.value = 'false';
+            }
+        }
+    </script>
 </head>
 <body>
     <nav class="nav-header">
@@ -27,53 +48,70 @@
             <div class="doc-preview" style="flex: 1;">
                 <div class="pdf-header">SOURCE: EXECUTION_COPY_FINAL.PDF</div>
                 <div class="dummy-pdf" style="height: 650px; overflow-y: auto; background: white; border: 1px solid var(--border); border-radius: 8px; padding: 30px; box-sizing: border-box;">
-                    <p class="ocr-text highlight"><strong>BORROWER:</strong> {{ loan.borrower }}</p>
-                    <p class="ocr-text"><strong>PREDICTED TYPE:</strong> {{ loan.loan_type }}</p>
-                    <p class="ocr-text highlight"><strong>SECTOR:</strong> {{ loan.sector }}</p>
-                    <p class="ocr-text"><strong>JURISDICTION:</strong> {{ loan.jurisdiction }}</p>
-                    <p class="ocr-text highlight"><strong>MARGIN:</strong> {{ loan.margin }}</p>
-                    <p class="ocr-text"><strong>REPORTING:</strong> {{ loan.track_milestone }}</p>
-                    <p class="ocr-text highlight"><strong>PROVISION:</strong> {{ loan.provision_summary }}</p>
-                    <hr style="border: 0.5px solid #eee; margin: 20px 0;">
-                    <p style="font-size: 0.8rem; color: #94a3b8;">... (rest of legal text remains in background) ...</p>
+                    <p class="ocr-text highlight"><strong>BORROWER:</strong> Vertex Global Solutions</p>
+                    <p class="ocr-text"><strong>SECTION 7.02: FINANCIAL COVENANTS</strong></p>
+                    <p class="ocr-text">The Borrower shall maintain at all times a Loan-to-Value (LTV) Ratio not exceeding 50.0%.</p>
+                    <p class="ocr-text highlight"><strong>GOVERNING LAW:</strong> This agreement shall be governed by the laws of the State of New York.</p>
+                    <p class="ocr-text"><strong>CURE PERIOD:</strong> Any breach of Section 7.02 shall be remedied within 10 Business Days of notice.</p>
+                    <p class="ocr-text">...</p>
+                    <div style="margin-top: 50px; color: #94a3b8; font-style: italic; border-top: 1px dashed #e2e8f0; padding-top: 20px;">[Remaining 142 pages scanned]</div>
                 </div>
             </div>
 
-            <!-- Right Side: Extraction Form -->
-            <div class="extraction-panel" style="flex: 1;">
-                <div class="panel-card" style="height: 650px; background: white; border: 1px solid var(--border); border-radius: 8px; padding: 30px; display: flex; flex-direction: column; box-sizing: border-box;">
-                    <h3 style="margin-top: 0; margin-bottom: 10px;">Requirement Mapping</h3>
-                    <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 25px;">Assign the correct obligation category to enable specialized monitoring logic.</p>
+            <!-- Right Side: Control & Validation Panel -->
+            <div class="extract-panel" style="width: 450px;">
+                <div class="card" style="background: white; border: 1px solid var(--border); border-radius: 8px; padding: 25px;">
                     
-                    <form action="{{ url_for('add_loan') }}" method="POST" class="extraction-form" style="flex: 1; display: flex; flex-direction: column; justify-content: space-between;">
-                        <div class="form-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                            <!-- Feature 1: Obligation Classification Engine -->
+                    <!-- Pre-Flight Validator Section -->
+                    <div class="validator-section" style="background: #f1f5f9; padding: 15px; border-radius: 6px; margin-bottom: 20px; border-left: 4px solid #38bdf8;">
+                        <h4 style="margin: 0 0 10px 0; font-size: 0.75rem; color: #475569; text-transform: uppercase;">Pre-Flight Compliance Check</h4>
+                        <div style="display: flex; flex-direction: column; gap: 10px;">
+                            <label style="display: flex; align-items: center; gap: 10px; font-size: 0.85rem; cursor: pointer;">
+                                <input type="checkbox" class="validator-checkbox" onclick="checkValidation()">
+                                <span>Jurisdiction Identified (NY Law)</span>
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 10px; font-size: 0.85rem; cursor: pointer;">
+                                <input type="checkbox" class="validator-checkbox" onclick="checkValidation()">
+                                <span>Cure Period Detected (10 Days)</span>
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 10px; font-size: 0.85rem; cursor: pointer;">
+                                <input type="checkbox" class="validator-checkbox" onclick="checkValidation()">
+                                <span>Financial Threshold (50% LTV)</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <form action="{{ url_for('add_loan') }}" method="POST">
+                        <input type="hidden" id="validation-input" name="is_validated" value="false">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
                             <div class="f-group" style="grid-column: span 2;">
+                                <label style="display: block; font-size: 0.75rem; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 6px;">Borrower Entity</label>
+                                <input type="text" name="borrower" value="{{ loan.borrower }}" style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 4px; box-sizing: border-box;">
+                            </div>
+                            
+                            <div class="f-group">
                                 <label style="display: block; font-size: 0.75rem; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 6px;">Obligation Category</label>
-                                <select name="loan_type" style="width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 4px; background: white; font-weight: 600; cursor: pointer; border-color: var(--navy);">
-                                    <option value="Information Delivery" {% if loan.loan_type == 'Information Delivery' %}selected{% endif %}>Information Delivery (Reporting)</option>
-                                    <option value="Financial Maintenance" {% if loan.loan_type == 'Financial Maintenance' %}selected{% endif %}>Financial Maintenance (Ratios)</option>
-                                    <option value="General Undertaking" {% if loan.loan_type == 'General Undertaking' %}selected{% endif %}>General Undertaking (Legal)</option>
-                                    <option value="Administrative" {% if loan.loan_type == 'Administrative' %}selected{% endif %}>Administrative Requirement</option>
+                                <select name="loan_type" style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 4px; background: white; box-sizing: border-box;">
+                                    <option value="Financial Maintenance" {% if loan.loan_type == 'Financial Maintenance' %}selected{% endif %}>Financial Maintenance</option>
+                                    <option value="Reporting Obligation" {% if loan.loan_type == 'Reporting Obligation' %}selected{% endif %}>Reporting Obligation</option>
+                                    <option value="Information Delivery" {% if loan.loan_type == 'Information Delivery' %}selected{% endif %}>Information Delivery</option>
+                                    <option value="General Undertaking" {% if loan.loan_type == 'General Undertaking' %}selected{% endif %}>General Undertaking</option>
                                 </select>
                             </div>
 
                             <div class="f-group">
-                                <label style="display: block; font-size: 0.75rem; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 6px;">Borrower</label>
-                                <input type="text" name="borrower" value="{{ loan.borrower }}" readonly style="width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 4px; background: #f8fafc; box-sizing: border-box; font-weight: 500;">
+                                <label style="display: block; font-size: 0.75rem; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 6px;">Facility Exposure</label>
+                                <input type="number" name="exposure" value="{{ loan.exposure }}" style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 4px; box-sizing: border-box;">
                             </div>
+
                             <div class="f-group">
-                                <label style="display: block; font-size: 0.75rem; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 6px;">Exposure ($)</label>
-                                <input type="number" name="exposure" value="{{ loan.exposure }}" readonly style="width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 4px; background: #f8fafc; box-sizing: border-box; font-weight: 500;">
+                                <label style="display: block; font-size: 0.75rem; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 6px;">Next Milestone</label>
+                                <input type="text" name="track_milestone" value="{{ loan.track_milestone }}" style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 4px; box-sizing: border-box;">
                             </div>
-                            
+
                             <div class="f-group">
-                                <label style="display: block; font-size: 0.75rem; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 6px;">Milestone</label>
-                                <input type="text" name="track_milestone" value="{{ loan.track_milestone }}" readonly style="width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 4px; background: #f8fafc; box-sizing: border-box; font-weight: 500;">
-                            </div>
-                            <div class="f-group">
-                                <label style="display: block; font-size: 0.75rem; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 6px;">Deadline</label>
-                                <input type="text" name="deadline" value="{{ loan.deadline }}" readonly style="width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 4px; background: #f8fafc; box-sizing: border-box; font-weight: 500;">
+                                <label style="display: block; font-size: 0.75rem; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 6px;">Milestone Deadline</label>
+                                <input type="date" name="deadline" value="{{ loan.deadline }}" style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 4px; box-sizing: border-box;">
                             </div>
 
                             <!-- Hidden persistent fields -->
@@ -88,7 +126,7 @@
                         </div>
 
                         <div class="action-footer" style="margin-top: 20px;">
-                            <button type="submit" class="btn-filled w-100" style="width: 100%; padding: 18px; background: var(--navy); color: white; border: none; border-radius: 4px; font-weight: 700; cursor: pointer; font-size: 1rem;">Confirm & Initialize Governance</button>
+                            <button id="submit-btn" type="submit" disabled style="width: 100%; padding: 18px; background: var(--navy); color: white; border: none; border-radius: 4px; font-weight: 700; cursor: not-allowed; font-size: 1rem; opacity: 0.5;">Confirm & Initialize Governance</button>
                         </div>
                     </form>
                 </div>
