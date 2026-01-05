@@ -12,10 +12,10 @@ portfolio_data = [
     {"id": "LN-404", "borrower": "Apex Logistics", "loan_type": "Financial Maintenance", "exposure": 250000000, "jurisdiction": "UK", "track_milestone": "Borrowing Base Certificate", "deadline": (datetime.now() - timedelta(days=5)).strftime('%Y-%m-%d'), "status": "Overdue", "rm": "Alice Sterling", "cro": "Sarah Jenkins", "margin": "2.50%", "sector": "Transportation", "provision_summary": "Eligible Receivables > 80%"},
     {"id": "LN-505", "borrower": "Solaris Energy", "loan_type": "Reporting Obligation", "exposure": 600000000, "jurisdiction": "France", "track_milestone": "ESG Impact Statement", "deadline": (datetime.now() + timedelta(days=3)).strftime('%Y-%m-%d'), "status": "Pending", "rm": "James Chen", "cro": "Robert Vance", "margin": "1.90%", "sector": "Utilities", "provision_summary": "Renewable Mix > 90%"},
     {"id": "LN-606", "borrower": "Sterling Property REIT", "loan_type": "Financial Maintenance", "exposure": 850000000, "jurisdiction": "UK", "track_milestone": "LTV Certificate", "deadline": (datetime.now() + timedelta(hours=12)).strftime('%Y-%m-%d'), "status": "Pending", "rm": "Alice Sterling", "cro": "Sarah Jenkins", "margin": "3.80%", "sector": "Real Estate", "provision_summary": "LTV < 65%"},
-    {"id": "LN-707", "borrower": "CloudScale Systems", "loan_type": "General Undertaking", "exposure": 200000000, "jurisdiction": "US", "track_milestone": "Series D Funding Proof", "deadline": (datetime.now() - timedelta(days=5)).strftime('%Y-%m-%d'), "status": "Overdue", "rm": "Markus Thorne", "cro": "Sarah Jenkins", "margin": "6.50%", "sector": "Technology", "provision_summary": "Runway > 12 Months"}
+    {"id": "LN-707", "borrower": "General Undertaking", "loan_type": "General Undertaking", "exposure": 200000000, "jurisdiction": "US", "track_milestone": "Series D Funding Proof", "deadline": (datetime.now() - timedelta(days=5)).strftime('%Y-%m-%d'), "status": "Overdue", "rm": "Markus Thorne", "cro": "Sarah Jenkins", "margin": "6.50%", "sector": "Technology", "provision_summary": "Runway > 12 Months"}
 ]
 
-# --- SYNCHRONIZED HISTORY (Populated from Portfolio) ---
+# --- SYNCHRONIZED HISTORY ---
 history_logs = []
 for loan in portfolio_data:
     history_logs.append({
@@ -34,6 +34,11 @@ def analyze_track_status(loan):
     elif days_left <= 2:
         return {"level": "AT-RISK", "color": "warning", "path": f"{loan['rm']} (RM)", "action": "Nudge"}
     return {"level": "ON-TRACK", "color": "success", "path": "Monitor", "action": "Update"}
+
+# Context processor to make datetime available in all templates
+@app.context_processor
+def inject_now():
+    return {'datetime': datetime, 'timedelta': timedelta}
 
 @app.route('/')
 def index(): return render_template('index.html')
