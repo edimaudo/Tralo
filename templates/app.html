@@ -8,22 +8,38 @@
     <script>
         function toggleDetails(id) {
             const detailRow = document.getElementById('details-' + id);
-            detailRow.style.display = detailRow.style.display === 'none' ? 'table-row' : 'none';
+            if (detailRow.style.display === 'none') {
+                detailRow.style.display = 'table-row';
+            } else {
+                detailRow.style.display = 'none';
+            }
         }
 
-        // Feature 2: Multi-Channel Distribution Logic
-        function distributeRequirement(borrower, milestone, provision) {
-            const channels = ['Email', 'Client Portal', 'SMS Alert'];
-            const message = `DISTRIBUTION INITIATED\n\nTo: ${borrower}\nRequirement: ${milestone}\nProvision: ${provision}\n\nNotice dispatched via: ${channels.join(', ')}`;
+        // Feature 2: Multi-Channel Distribution Action
+        function triggerDistribution(actionName, borrower, milestone) {
+            const channels = ['Email', 'SMS', 'Client Portal'];
+            const message = `Requirement Distributed: ${milestone} notice sent to ${borrower} via ${channels.join(', ')}.`;
             
-            // UI Feedback
             const toast = document.createElement('div');
-            toast.className = 'toast-notification';
-            toast.style.cssText = "position:fixed; bottom:20px; right:20px; background:#0f172a; color:white; padding:20px; border-radius:8px; box-shadow:0 10px 15px -3px rgba(0,0,0,0.1); z-index:1000; border-left:4px solid #38bdf8; max-width:350px; font-size:0.9rem;";
-            toast.innerHTML = `<strong>Requirement Distributed</strong><br><small style="color:#94a3b8">Notice for ${milestone} sent to ${borrower} across 3 channels.</small>`;
+            toast.style.position = 'fixed';
+            toast.style.bottom = '20px';
+            toast.style.right = '20px';
+            toast.style.background = '#0f172a';
+            toast.style.color = 'white';
+            toast.style.padding = '15px 25px';
+            toast.style.borderRadius = '8px';
+            toast.style.boxShadow = '0 10px 15px -3px rgba(0,0,0,0.3)';
+            toast.style.zIndex = '1000';
+            toast.style.borderLeft = '4px solid #38bdf8';
+            toast.style.fontSize = '0.85rem';
+            toast.innerHTML = `<strong>Workflow: ${actionName}</strong><br>${message}`;
             
             document.body.appendChild(toast);
-            setTimeout(() => toast.remove(), 4000);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transition = 'opacity 0.5s ease';
+                setTimeout(() => toast.remove(), 500);
+            }, 4000);
         }
     </script>
 </head>
@@ -38,9 +54,10 @@
     </nav>
 
     <div class="container">
+        <!-- Dashboard Summary Stats -->
         <div class="summary-stats">
             <div class="stat-box">
-                <label>Total Facilities</label>
+                <label>Total Assets</label>
                 <span class="stat-val">{{ portfolio|length }}</span>
             </div>
             <div class="stat-box alert-border">
@@ -51,14 +68,13 @@
              <a href="{{ url_for('reader') }}" style="text-decoration: none; flex: 1;">
                 <div class="stat-box" style="border-top-color: var(--accent); transition: 0.2s; cursor: pointer;">
                     <label>Obligation Ingestion</label>
-                    <span class="stat-val" style="color: var(--accent);">+ New Requirement</span>
+                    <span class="stat-val" style="color: var(--accent);">+ New Track</span>
                 </div>
             </a>
         </div>
 
-        <div style="margin-bottom: 25px; display: flex; justify-content: space-between; align-items: center;">
+        <div style="margin-bottom: 25px;">
             <h2 style="margin: 0;">Governance Monitor</h2>
-            <span style="font-size: 0.8rem; color: #64748b;">Last Updated: Just now</span>
         </div>
 
         <table class="data-table">
@@ -67,9 +83,9 @@
                     <th>Borrower</th>
                     <th>Category</th>
                     <th>Exposure</th>
-                    <th>Next Milestone</th>
+                    <th>Milestone</th>
                     <th>Status</th>
-                    <th>Review</th>
+                    <th>Audit</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -81,7 +97,7 @@
                         <small style="color: #64748b;">{{ loan.id }}</small>
                     </td>
                     <td>
-                        <span style="font-size: 0.75rem; font-weight: 600; color: #475569; background: #f1f5f9; padding: 2px 6px; border-radius: 4px;">
+                        <span style="font-size: 0.7rem; font-weight: 700; color: #475569; background: #f1f5f9; padding: 2px 6px; border-radius: 4px; text-transform: uppercase;">
                             {{ loan.loan_type }}
                         </span>
                     </td>
@@ -94,59 +110,39 @@
                         {% set status_class = 'STABLE' %}
                         {% if loan.risk.level == 'OFF-TRACK' %}{% set status_class = 'CRITICAL' %}
                         {% elif loan.risk.level == 'AT-RISK' %}{% set status_class = 'HIGH' %}{% endif %}
-                        
-                        <span class="pill {{ status_class }}">
-                            {{ loan.risk.level }}
-                        </span>
+                        <span class="pill {{ status_class }}">{{ loan.risk.level }}</span>
                     </td>
                     <td>
-                        <button class="expand-btn" onclick="toggleDetails('{{ loop.index }}')" style="background: white; border: 1px solid var(--border); padding: 5px 12px; border-radius: 4px; cursor: pointer; font-weight: 600;">Details</button>
+                        <button class="expand-btn" onclick="toggleDetails('{{ loop.index }}')">View Log</button>
                     </td>
                     <td>
-                        <!-- Feature 2: Distribution Button -->
                         <button class="workflow-btn" 
-                                onclick="distributeRequirement('{{ loan.borrower }}', '{{ loan.track_milestone }}', '{{ loan.provision_summary }}')"
-                                style="background: var(--navy); color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 0.75rem; text-transform: uppercase;">
-                            Distribute Notice
+                                onclick="triggerDistribution('{{ loan.risk.action }}', '{{ loan.borrower }}', '{{ loan.track_milestone }}')"
+                                style="background: var(--navy); color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 0.7rem; text-transform: uppercase;">
+                            Distribute
                         </button>
                     </td>
                 </tr>
                 <!-- Hidden Detail Row -->
                 <tr id="details-{{ loop.index }}" style="display: none; background: #fcfcfc;">
                     <td colspan="7">
-                        <div style="padding: 30px; border-left: 4px solid var(--navy);">
-                            <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 40px;">
-                                <div>
-                                    <h4 style="margin-top: 0; color: var(--navy); text-transform: uppercase; font-size: 0.8rem; letter-spacing: 0.05em;">Governing Provision</h4>
-                                    <p style="font-size: 0.95rem; color: #1e293b; background: white; padding: 15px; border: 1px solid var(--border); border-radius: 4px; line-height: 1.5;">
-                                        {{ loan.provision_summary }}
-                                    </p>
-                                    
-                                    <h4 style="margin-top: 20px; color: var(--navy); text-transform: uppercase; font-size: 0.8rem; letter-spacing: 0.05em;">Compliance Timeline</h4>
-                                    <div class="timeline" style="margin-top: 15px;">
-                                        <div class="timeline-item" style="padding-bottom: 15px; border-left: 2px solid #e2e8f0; padding-left: 20px; position: relative;">
-                                            <div style="position: absolute; left: -7px; top: 0; width: 12px; height: 12px; background: #38bdf8; border-radius: 50%;"></div>
-                                            <strong>Last Distribution</strong><br>
-                                            <small style="color: #64748b;">Notice sent via Email/Portal on {{ (datetime.now() - timedelta(days=5)).strftime('%b %d, %Y') }}</small>
-                                        </div>
-                                        <div class="timeline-item" style="padding-bottom: 0; border-left: 2px solid transparent; padding-left: 20px; position: relative;">
-                                            <div style="position: absolute; left: -7px; top: 0; width: 12px; height: 12px; background: #cbd5e1; border-radius: 50%;"></div>
-                                            <strong>Next Requirement</strong><br>
-                                            <small style="color: #64748b;">Scheduled for: {{ loan.deadline }}</small>
-                                        </div>
-                                    </div>
+                        <div style="padding: 25px 40px; border-left: 4px solid var(--navy); margin: 10px;">
+                            <h4 style="margin: 0 0 15px 0; color: var(--navy); font-size: 0.8rem; text-transform: uppercase;">Distribution & Compliance Log</h4>
+                            <div class="timeline" style="border-left: 2px solid #e2e8f0; padding-left: 20px;">
+                                <div class="timeline-item" style="position: relative; margin-bottom: 15px;">
+                                    <div style="position: absolute; left: -26px; top: 4px; width: 10px; height: 10px; background: #38bdf8; border-radius: 50%;"></div>
+                                    <strong>Multi-Channel Notice Dispatched</strong><br>
+                                    <small style="color: #64748b;">Sent via Email/Portal on {{ (datetime.now() - timedelta(days=2)).strftime('%b %d, %Y') }}</small>
                                 </div>
-                                
-                                <div style="background: #f8fafc; padding: 20px; border-radius: 8px; border: 1px solid var(--border);">
-                                    <h4 style="margin-top: 0; color: var(--navy); font-size: 0.8rem;">ASSIGNED TEAM</h4>
-                                    <div style="margin-bottom: 15px;">
-                                        <small style="color: #64748b; font-weight: 700;">Relationship Mgr</small><br>
-                                        <span style="font-size: 0.9rem;">{{ loan.rm }}</span>
-                                    </div>
-                                    <div>
-                                        <small style="color: #64748b; font-weight: 700;">Credit Officer</small><br>
-                                        <span style="font-size: 0.9rem;">{{ loan.cro }}</span>
-                                    </div>
+                                <div class="timeline-item" style="position: relative; margin-bottom: 15px;">
+                                    <div style="position: absolute; left: -26px; top: 4px; width: 10px; height: 10px; background: #cbd5e1; border-radius: 50%;"></div>
+                                    <strong>Governance Initialized</strong><br>
+                                    <small style="color: #64748b;">Provision: {{ loan.provision_summary }}</small>
+                                </div>
+                                <div class="timeline-item" style="position: relative;">
+                                    <div style="position: absolute; left: -26px; top: 4px; width: 10px; height: 10px; background: #cbd5e1; border-radius: 50%;"></div>
+                                    <strong>Last System Update</strong><br>
+                                    <small style="color: #64748b;">Status verified: {{ loan.risk.level }}</small>
                                 </div>
                             </div>
                         </div>
