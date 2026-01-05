@@ -19,7 +19,7 @@
     <div class="container">
         <div class="reader-header">
             <h1>Document Intelligence</h1>
-            <p>The system has scanned the credit agreement and extracted the following tracking parameters.</p>
+            <p>Classify and review the extracted obligation parameters before initializing the governance track.</p>
         </div>
 
         <div class="reader-split" style="display: flex; gap: 30px; align-items: stretch;">
@@ -28,12 +28,12 @@
                 <div class="pdf-header">SOURCE: EXECUTION_COPY_FINAL.PDF</div>
                 <div class="dummy-pdf" style="height: 650px; overflow-y: auto; background: white; border: 1px solid var(--border); border-radius: 8px; padding: 30px; box-sizing: border-box;">
                     <p class="ocr-text highlight"><strong>BORROWER:</strong> {{ loan.borrower }}</p>
-                    <p class="ocr-text"><strong>FACILITY:</strong> {{ loan.loan_type }}</p>
+                    <p class="ocr-text"><strong>PREDICTED TYPE:</strong> {{ loan.loan_type }}</p>
                     <p class="ocr-text highlight"><strong>SECTOR:</strong> {{ loan.sector }}</p>
                     <p class="ocr-text"><strong>JURISDICTION:</strong> {{ loan.jurisdiction }}</p>
                     <p class="ocr-text highlight"><strong>MARGIN:</strong> {{ loan.margin }}</p>
                     <p class="ocr-text"><strong>REPORTING:</strong> {{ loan.track_milestone }}</p>
-                    <p class="ocr-text highlight"><strong>COVENANT:</strong> {{ loan.provision_summary }}</p>
+                    <p class="ocr-text highlight"><strong>PROVISION:</strong> {{ loan.provision_summary }}</p>
                     <hr style="border: 0.5px solid #eee; margin: 20px 0;">
                     <p style="font-size: 0.8rem; color: #94a3b8;">... (rest of legal text remains in background) ...</p>
                 </div>
@@ -42,38 +42,44 @@
             <!-- Right Side: Extraction Form -->
             <div class="extraction-panel" style="flex: 1;">
                 <div class="panel-card" style="height: 650px; background: white; border: 1px solid var(--border); border-radius: 8px; padding: 30px; display: flex; flex-direction: column; box-sizing: border-box;">
-                    <h3 style="margin-top: 0; margin-bottom: 10px;">Extracted Tracking Parameters</h3>
-                    <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 25px;">Review the data below before adding to the active track monitor.</p>
+                    <h3 style="margin-top: 0; margin-bottom: 10px;">Requirement Mapping</h3>
+                    <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 25px;">Assign the correct obligation category to enable specialized monitoring logic.</p>
                     
                     <form action="{{ url_for('add_loan') }}" method="POST" class="extraction-form" style="flex: 1; display: flex; flex-direction: column; justify-content: space-between;">
                         <div class="form-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                            <!-- Feature 1: Obligation Classification Engine -->
+                            <div class="f-group" style="grid-column: span 2;">
+                                <label style="display: block; font-size: 0.75rem; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 6px;">Obligation Category</label>
+                                <select name="loan_type" style="width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 4px; background: white; font-weight: 600; cursor: pointer; border-color: var(--navy);">
+                                    <option value="Information Delivery" {% if loan.loan_type == 'Information Delivery' %}selected{% endif %}>Information Delivery (Reporting)</option>
+                                    <option value="Financial Maintenance" {% if loan.loan_type == 'Financial Maintenance' %}selected{% endif %}>Financial Maintenance (Ratios)</option>
+                                    <option value="General Undertaking" {% if loan.loan_type == 'General Undertaking' %}selected{% endif %}>General Undertaking (Legal)</option>
+                                    <option value="Administrative" {% if loan.loan_type == 'Administrative' %}selected{% endif %}>Administrative Requirement</option>
+                                </select>
+                            </div>
+
                             <div class="f-group">
                                 <label style="display: block; font-size: 0.75rem; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 6px;">Borrower</label>
                                 <input type="text" name="borrower" value="{{ loan.borrower }}" readonly style="width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 4px; background: #f8fafc; box-sizing: border-box; font-weight: 500;">
                             </div>
                             <div class="f-group">
-                                <label style="display: block; font-size: 0.75rem; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 6px;">Sector</label>
-                                <input type="text" name="sector" value="{{ loan.sector }}" readonly style="width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 4px; background: #f8fafc; box-sizing: border-box; font-weight: 500;">
-                            </div>
-                            <div class="f-group">
                                 <label style="display: block; font-size: 0.75rem; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 6px;">Exposure ($)</label>
                                 <input type="number" name="exposure" value="{{ loan.exposure }}" readonly style="width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 4px; background: #f8fafc; box-sizing: border-box; font-weight: 500;">
                             </div>
+                            
                             <div class="f-group">
-                                <label style="display: block; font-size: 0.75rem; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 6px;">Margin</label>
-                                <input type="text" name="margin" value="{{ loan.margin }}" readonly style="width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 4px; background: #f8fafc; box-sizing: border-box; font-weight: 500;">
-                            </div>
-                            <div class="f-group">
-                                <label style="display: block; font-size: 0.75rem; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 6px;">Jurisdiction</label>
-                                <input type="text" name="jurisdiction" value="{{ loan.jurisdiction }}" readonly style="width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 4px; background: #f8fafc; box-sizing: border-box; font-weight: 500;">
-                            </div>
-                            <div class="f-group">
-                                <label style="display: block; font-size: 0.75rem; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 6px;">Tracking Milestone</label>
+                                <label style="display: block; font-size: 0.75rem; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 6px;">Milestone</label>
                                 <input type="text" name="track_milestone" value="{{ loan.track_milestone }}" readonly style="width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 4px; background: #f8fafc; box-sizing: border-box; font-weight: 500;">
                             </div>
+                            <div class="f-group">
+                                <label style="display: block; font-size: 0.75rem; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 6px;">Deadline</label>
+                                <input type="text" name="deadline" value="{{ loan.deadline }}" readonly style="width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 4px; background: #f8fafc; box-sizing: border-box; font-weight: 500;">
+                            </div>
 
-                            <input type="hidden" name="loan_type" value="{{ loan.loan_type }}">
-                            <input type="hidden" name="deadline" value="{{ loan.deadline }}">
+                            <!-- Hidden persistent fields -->
+                            <input type="hidden" name="sector" value="{{ loan.sector }}">
+                            <input type="hidden" name="margin" value="{{ loan.margin }}">
+                            <input type="hidden" name="jurisdiction" value="{{ loan.jurisdiction }}">
                             
                             <div class="f-group" style="grid-column: span 2;">
                                 <label style="display: block; font-size: 0.75rem; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 6px;">Provision Summary</label>
@@ -82,19 +88,12 @@
                         </div>
 
                         <div class="action-footer" style="margin-top: 20px;">
-                            <button type="submit" class="btn-filled w-100" style="width: 100%; padding: 18px; background: var(--navy); color: white; border: none; border-radius: 4px; font-weight: 700; cursor: pointer; font-size: 1rem;">Confirm & Add to Portfolio</button>
-                            <button type="button" onclick="window.location.reload()" class="btn-ghost w-100" style="width: 100%; margin-top: 12px; padding: 12px; background: transparent; color: #475569; border: 1px solid #cbd5e1; border-radius: 4px; cursor: pointer; font-weight: 500;">Scan Different Document</button>
+                            <button type="submit" class="btn-filled w-100" style="width: 100%; padding: 18px; background: var(--navy); color: white; border: none; border-radius: 4px; font-weight: 700; cursor: pointer; font-size: 1rem;">Confirm & Initialize Governance</button>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
     </div>
-
-    <script>
-        document.querySelector('.extraction-form').onsubmit = function() {
-            console.log("Ingesting loan tracking data...");
-        };
-    </script>
 </body>
 </html>
