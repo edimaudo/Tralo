@@ -40,7 +40,7 @@ def inject_now():
 def index(): return render_template('index.html')
 
 @app.route('/deck')
-def index(): return render_template('pitch_deck.html')
+def deck(): return render_template('pitch_deck.html')
 
 @app.route('/dashboard')
 def dashboard():
