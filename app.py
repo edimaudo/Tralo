@@ -36,6 +36,11 @@ def analyze_track_status(loan):
 def inject_now():
     return {'datetime': datetime, 'timedelta': timedelta}
 
+# 404 Error Handler: Redirects all missing pages to the index
+@app.errorhandler(404)
+def page_not_found(e):
+    return redirect(url_for('index'))
+
 @app.route('/')
 def index(): return render_template('index.html')
 
