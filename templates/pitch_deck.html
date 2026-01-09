@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tralo | Investor Experience</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --navy-950: #020617;
+            --navy-900: #0f172a;
+            --blue-500: #3b82f6;
+            --blue-600: #2563eb;
+            --slate-100: #f1f5f9;
+            --slate-300: #cbd5e1;
+            --slate-400: #94a3b8;
+            --slate-500: #64748b;
+        }
+
+        * { box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+        
+        body { 
+            margin: 0; 
+            padding: 0; 
+            font-family: 'Inter', sans-serif; 
+            background: var(--navy-950); 
+            color: white;
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            overflow: hidden; 
+        }
+
+        /* Presentation Stage */
+        #stage {
+            width: 100vw;
+            height: 100vh;
+            max-width: 1280px;
+            max-height: 720px;
+            position: relative;
+            background: var(--navy-900);
+            box-shadow: 0 50px 100px -20px rgba(0,0,0,0.7);
+            border: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Slides */
+        .slide {
+            position: absolute;
+            inset: 0;
+            padding: 80px 100px;
+            display: flex;
+            flex-direction: column;
+            opacity: 0;
+            transform: translateX(50px);
+            transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .slide.active {
+            opacity: 1;
+            transform: translateX(0);
+            pointer-events: auto;
+            z-index: 10;
+        }
+
+        .slide.prev {
+            transform: translateX(-50px);
+        }
+
+        /* Branding */
+        .header {
+            position: absolute;
+            top: 40px;
+            left: 100px;
+            right: 100px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 20;
+        }
+
+        .brand { font-weight: 800; font-size: 1.25rem; letter-spacing: 2px; color: var(--blue-500); }
+
+        /* Typography */
+        .tag { color: var(--blue-500); font-weight: 700; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 3px; margin-bottom: 20px; display: block; }
+        h1 { font-size: 4rem; font-weight: 800; margin: 0; line-height: 1; letter-spacing: -0.04em; }
+        h2 { font-size: 3rem; font-weight: 800; margin: 0 0 20px 0; line-height: 1.1; }
+        p { font-size: 1.25rem; color: var(--slate-400); line-height: 1.6; max-width: 700px; }
+
+        /* Layout Helpers */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; flex: 1; }
+        
+        /* Visual Components */
+        .feature-box {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            transition: transform 0.3s ease;
+        }
+        .feature-box:hover { transform: translateY(-5px); border-color: var(--blue-500); }
+        .feature-box h4 { margin: 0 0 10px 0; font-size: 1.1rem; color: white; }
+        .feature-box p { font-size: 0.95rem; margin: 0; color: var(--slate-400); }
+
+        .stat-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 16px;
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--blue-500);
+            border-radius: 100px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-right: 10px;
+        }
+
+        /* Navigation Controls */
+        .controls {
+            position: absolute;
+            bottom: 40px;
+            right: 100px;
+            display: flex;
+            gap: 15px;
+            z-index: 100;
+        }
+
+        .btn {
+            height: 50px;
+            padding: 0 30px;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.2);
+            background: transparent;
+            color: white;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Improved Hover Logic */
+        .btn:hover:not(:disabled) {
+            background: white;
+            color: var(--navy-950);
+            border-color: white;
+        }
+
+        .btn.primary {
+            background: var(--blue-600);
+            border-color: var(--blue-600);
+        }
+
+        .btn.primary:hover {
+            background: #3b82f6;
+            color: white;
+            border-color: #3b82f6;
+        }
+
+        .btn:disabled {
+            opacity: 0.2;
+            cursor: not-allowed;
+        }
+
+        .progress-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 4px;
+            background: var(--blue-600);
+            transition: width 0.4s ease;
+            z-index: 100;
+        }
+
+        /* Specific Visuals */
+        .monitor-frame {
+            background: #000;
+            border-radius: 12px;
+            padding: 20px;
+            border: 4px solid #1e293b;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+
+        .status-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px;
+            border-bottom: 1px solid #1e293b;
+        }
+
+        .pill-active { background: #064e3b; color: #10b981; padding: 4px 10px; border-radius: 4px; font-size: 0.7rem; font-weight: 800; }
+        .pill-risk { background: #450a0a; color: #ef4444; padding: 4px 10px; border-radius: 4px; font-size: 0.7rem; font-weight: 800; }
+    </style>
+</head>
+<body>
+
+    <div id="stage">
+        <div class="header">
+            <div class="brand">TRALO</div>
+            <div id="slide-index" style="color: var(--slate-500); font-weight: 700; font-size: 0.8rem;">01 / 06</div>
+        </div>
+
+        <!-- Slide 1: Hero -->
+        <div class="slide active" id="s1">
+            <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: flex-start;">
+                <span class="tag">B2B Financial Technology</span>
+                <h1>Loan Obligation<br><span style="color: var(--blue-500)">Monitoring.</span></h1>
+                <p style="margin-top: 30px;">Bridging the gap between static credit agreements and operational compliance through intelligent automation.</p>
+                <div style="margin-top: 40px;">
+                    <button class="btn primary" onclick="move(1)">Launch Pitch Deck</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 2: The Core Problem -->
+        <div class="slide" id="s2">
+            <div class="grid-2">
+                <div>
+                    <span class="tag">The Challenge</span>
+                    <h2>Covenant Leakage.</h2>
+                    <p>Billions in capital are governed by complex PDFs. When obligations are buried in text, reporting is missed, financial health degrades, and "Silent Defaults" occur.</p>
+                    <div style="margin-top: 30px;">
+                        <div class="stat-badge"><i class="fas fa-times"></i> Manual Oversight</div>
+                        <div class="stat-badge"><i class="fas fa-times"></i> Delayed Remediation</div>
+                    </div>
+                </div>
+                <div>
+                    <div class="feature-box" style="border-left: 4px solid #ef4444;">
+                        <h4>The Status Quo</h4>
+                        <p>Lenders rely on manual calendar reminders and fragmented spreadsheets to track thousands of unique covenants.</p>
+                    </div>
+                    <div class="feature-box" style="border-left: 4px solid var(--blue-500);">
+                        <h4>The Tralo Way</h4>
+                        <p>A unified digital twin of every loan agreement, providing proactive governance and automated enforcement.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: App Methodology -->
+        <div class="slide" id="s3">
+            <span class="tag">The Compliance Engine</span>
+            <h2>How it Works.</h2>
+            <div class="grid-2" style="margin-top: 20px;">
+                <div>
+                    <div class="feature-box">
+                        <i class="fas fa-clock" style="color: var(--blue-500); margin-bottom: 15px;"></i>
+                        <h4>Risk Analysis</h4>
+                        <p>Automated prioritization based on <strong>Time-to-Default</strong>. We surface the most urgent obligations to the top of the queue.</p>
+                    </div>
+                    <div class="feature-box">
+                        <i class="fas fa-route" style="color: var(--blue-500); margin-bottom: 15px;"></i>
+                        <h4>Stakeholder Routing</h4>
+                        <p>Direct escalation paths based on risk severity, ensuring the right person (RM or CRO) sees the risk at the right time.</p>
+                    </div>
+                </div>
+                <div>
+                    <div class="feature-box">
+                        <i class="fas fa-chart-line" style="color: var(--blue-500); margin-bottom: 15px;"></i>
+                        <h4>Exposure Valuation</h4>
+                        <p>Real-time calculation of <strong>Capital at Risk</strong> across the entire portfolio, categorizing stability into actionable tiers.</p>
+                    </div>
+                    <div class="monitor-frame">
+                        <div class="status-row"><span>Precision Mfg</span><span class="pill-risk">OFF-TRACK</span></div>
+                        <div class="status-row"><span>Global Telecom</span><span class="pill-active">STABLE</span></div>
+                        <div class="status-row"><span>Pacific Infra</span><span class="pill-active">AT-RISK</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: Document Intelligence -->
+        <div class="slide" id="s4">
+            <div class="grid-2">
+                <div class="monitor-frame" style="background: #1e293b; padding: 40px;">
+                    <div style="height: 10px; width: 60%; background: var(--blue-500); border-radius: 5px; margin-bottom: 20px;"></div>
+                    <div style="height: 10px; width: 80%; background: #334155; border-radius: 5px; margin-bottom: 10px;"></div>
+                    <div style="height: 10px; width: 40%; background: #334155; border-radius: 5px; margin-bottom: 10px;"></div>
+                    <div style="height: 10px; width: 90%; background: #334155; border-radius: 5px; margin-bottom: 10px;"></div>
+                    <div style="margin-top: 30px; border-top: 1px solid #475569; padding-top: 20px;">
+                        <div style="color: var(--blue-500); font-weight: 800; font-size: 0.8rem;">EXTRACTED PROVISION:</div>
+                        <div style="font-size: 0.9rem; margin-top: 10px;">"Net Debt/EBITDA < 3.5x"</div>
+                    </div>
+                </div>
+                <div>
+                    <span class="tag">The Ingestion Pipeline</span>
+                    <h2>Intelligent Ingestion.</h2>
+                    <p>Tralo maps <strong>"Provision Language"</strong> directly to digital milestones. This removes manual data entry and creates a verified audit trail from day one.</p>
+                    <div class="feature-box" style="margin-top: 30px;">
+                        <h4>Requirement Validation</h4>
+                        <p>Every extracted parameter is cross-referenced against the agreement to ensure 100% governance accuracy.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: Active Remediation -->
+        <div class="slide" id="s5">
+            <div class="grid-2">
+                <div>
+                    <span class="tag">The Remediation Loop</span>
+                    <h2>Closed-Loop.</h2>
+                    <p>Communication bottlenecks are the primary cause of compliance failure. Tralo automates the entire distribution cycle.</p>
+                    <ul style="list-style: none; padding: 0; margin-top: 30px;">
+                        <li style="margin-bottom: 20px; display: flex; align-items: center; gap: 15px;">
+                            <i class="fas fa-paper-plane" style="color: var(--blue-500);"></i>
+                            <span>Multi-Channel Distribution (Email, SMS, Portal)</span>
+                        </li>
+                        <li style="margin-bottom: 20px; display: flex; align-items: center; gap: 15px;">
+                            <i class="fas fa-bell" style="color: var(--blue-500);"></i>
+                            <span>Automated Proactive Reminders</span>
+                        </li>
+                        <li style="margin-bottom: 20px; display: flex; align-items: center; gap: 15px;">
+                            <i class="fas fa-check-double" style="color: var(--blue-500);"></i>
+                            <span>Instant Evidence Collection & Validation</span>
+                        </li>
+                    </ul>
+                </div>
+                <div style="text-align: center;">
+                   <div style="font-size: 6rem; color: rgba(255,255,255,0.05); position: absolute; right: 100px; top: 50%; transform: translateY(-50%); font-weight: 900;">REMEDIATE</div>
+                   <div class="feature-box" style="position: relative; z-index: 2;">
+                       <h3 style="color: var(--blue-500);">Operational Efficiency</h3>
+                       <p>By automating the nudge-and-collect cycle, Credit Admins save 70% of their manual reporting time.</p>
+                   </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: The Vision -->
+        <div class="slide" id="s6">
+            <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;">
+                <span class="tag">Final Vision</span>
+                <h2 style="font-size: 4rem;">Compliance, Automated.</h2>
+                <p style="margin-top: 20px;">Tralo is ready to transform how institutional lenders manage risk, protecting billions in capital through proactive governance.</p>
+                <div style="margin-top: 50px; display: flex; gap: 20px;">
+                    <button class="btn primary">Request Case Study</button>
+                    <button class="btn" onclick="goTo(0)">Restart Pitch</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="progress-bar" id="progress" style="width: 16.66%;"></div>
+
+        <div class="controls">
+            <button class="btn" id="prevBtn" onclick="move(-1)" disabled>Back</button>
+            <button class="btn primary" id="nextBtn" onclick="move(1)">Next</button>
+        </div>
+    </div>
+
+    <script>
+        let current = 0;
+        const slides = document.querySelectorAll('.slide');
+        const nextBtn = document.getElementById('nextBtn');
+        const prevBtn = document.getElementById('prevBtn');
+        const progress = document.getElementById('progress');
+        const indexLabel = document.getElementById('slide-index');
+
+        function update() {
+            slides.forEach((s, i) => {
+                s.classList.toggle('active', i === current);
+                s.classList.toggle('prev', i < current);
+            });
+            
+            prevBtn.disabled = current === 0;
+            nextBtn.textContent = current === slides.length - 1 ? 'Finish' : 'Next';
+            
+            const perc = ((current + 1) / slides.length) * 100;
+            progress.style.width = perc + '%';
+            indexLabel.textContent = `0${current + 1} / 0${slides.length}`;
+        }
+
+        function move(dir) {
+            current = Math.max(0, Math.min(slides.length - 1, current + dir));
+            update();
+        }
+
+        function goTo(idx) {
+            current = idx;
+            update();
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') move(1);
+            if (e.key === 'ArrowLeft') move(-1);
+        });
+
+        // Initialize
+        update();
+    </script>
+</body>
+</html>
