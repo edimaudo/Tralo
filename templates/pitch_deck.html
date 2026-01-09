@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tralo | Investor Experience</title>
+    <title>Tralo | Investor Pitch Deck</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -96,6 +96,21 @@
 
         /* Layout Helpers */
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; flex: 1; }
+
+        .grid-3 {
+            display: grid;
+            /* Force exactly 3 columns of equal width */
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 20px; 
+            margin-top: 30px;
+            align-items: stretch; /* Ensures all boxes are the same height */
+        }
+
+        /* Ensure the boxes themselves don't have a fixed width that forces a wrap */
+        .feature-box {
+            width: 100%;
+            box-sizing: border-box;
+        }
         
         /* Visual Components */
         .feature-box {
@@ -208,17 +223,25 @@
     <div id="stage">
         <div class="header">
             <div class="brand">TRALO</div>
-            <div id="slide-index" style="color: var(--slate-500); font-weight: 700; font-size: 0.8rem;">01 / 06</div>
+            <!--
+            <div id="slide-index" style="color: var(--slate-500); font-weight: 700; font-size: 0.8rem;"></div>
+            -->
+            
+        
         </div>
 
         <!-- Slide 1: Hero -->
         <div class="slide active" id="s1">
             <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: flex-start;">
+                <!--
                 <span class="tag">B2B Financial Technology</span>
-                <h1>Loan Obligation<br><span style="color: var(--blue-500)">Monitoring.</span></h1>
+                -->
+                <h1>Loan Obligation<br><span style="color: var(--blue-500)">Monitoring System</span></h1>
                 <p style="margin-top: 30px;">Bridging the gap between static credit agreements and operational compliance through intelligent automation.</p>
                 <div style="margin-top: 40px;">
+                     <!--
                     <button class="btn primary" onclick="move(1)">Launch Pitch Deck</button>
+                    -->
                 </div>
             </div>
         </div>
@@ -228,21 +251,23 @@
             <div class="grid-2">
                 <div>
                     <span class="tag">The Challenge</span>
-                    <h2>Covenant Leakage.</h2>
+                    <h2>Financial Covenant Leakage</h2>
                     <p>Billions in capital are governed by complex PDFs. When obligations are buried in text, reporting is missed, financial health degrades, and "Silent Defaults" occur.</p>
+                    <!--
                     <div style="margin-top: 30px;">
-                        <div class="stat-badge"><i class="fas fa-times"></i> Manual Oversight</div>
-                        <div class="stat-badge"><i class="fas fa-times"></i> Delayed Remediation</div>
+                        <div class="stat-badge"><i class="fas fa-times"></i>  Manual Oversight</div>
+                        <div class="stat-badge"><i class="fas fa-times"></i>  Delayed Remediation</div>
                     </div>
+                    -->
                 </div>
                 <div>
                     <div class="feature-box" style="border-left: 4px solid #ef4444;">
                         <h4>The Status Quo</h4>
-                        <p>Lenders rely on manual calendar reminders and fragmented spreadsheets to track thousands of unique covenants.</p>
+                        <p>Lenders rely on manual calendar reminders and fragmented spreadsheets to track thousands of unique financial covenants.</p>
                     </div>
                     <div class="feature-box" style="border-left: 4px solid var(--blue-500);">
                         <h4>The Tralo Way</h4>
-                        <p>A unified digital twin of every loan agreement, providing proactive governance and automated enforcement.</p>
+                        <p>A financial digital twin of every loan agreement, providing proactive governance</p>
                     </div>
                 </div>
             </div>
@@ -250,32 +275,24 @@
 
         <!-- Slide 3: App Methodology -->
         <div class="slide" id="s3">
+            <br><br><br>
             <span class="tag">The Compliance Engine</span>
-            <h2>How it Works.</h2>
-            <div class="grid-2" style="margin-top: 20px;">
-                <div>
-                    <div class="feature-box">
-                        <i class="fas fa-clock" style="color: var(--blue-500); margin-bottom: 15px;"></i>
-                        <h4>Risk Analysis</h4>
-                        <p>Automated prioritization based on <strong>Time-to-Default</strong>. We surface the most urgent obligations to the top of the queue.</p>
-                    </div>
-                    <div class="feature-box">
-                        <i class="fas fa-route" style="color: var(--blue-500); margin-bottom: 15px;"></i>
-                        <h4>Stakeholder Routing</h4>
-                        <p>Direct escalation paths based on risk severity, ensuring the right person (RM or CRO) sees the risk at the right time.</p>
-                    </div>
+            <h2>How it Works</h2>
+            
+            <div class="grid-3">
+                <div class="feature-box">
+                    <h4>Risk Analysis</h4>
+                    <p>Automated prioritization based on <strong>Time-to-Default</strong>. We surface the most urgent obligations using color coded system.</p>
                 </div>
-                <div>
-                    <div class="feature-box">
-                        <i class="fas fa-chart-line" style="color: var(--blue-500); margin-bottom: 15px;"></i>
-                        <h4>Exposure Valuation</h4>
-                        <p>Real-time calculation of <strong>Capital at Risk</strong> across the entire portfolio, categorizing stability into actionable tiers.</p>
-                    </div>
-                    <div class="monitor-frame">
-                        <div class="status-row"><span>Precision Mfg</span><span class="pill-risk">OFF-TRACK</span></div>
-                        <div class="status-row"><span>Global Telecom</span><span class="pill-active">STABLE</span></div>
-                        <div class="status-row"><span>Pacific Infra</span><span class="pill-active">AT-RISK</span></div>
-                    </div>
+
+                <div class="feature-box">
+                    <h4>Stakeholder Routing</h4>
+                    <p>Direct escalation paths based on risk severity, ensuring the right person sees the risk at the right time.</p>
+                </div>
+
+                <div class="feature-box">
+                    <h4>Exposure Valuation</h4>
+                    <p>Real-time calculation of <strong>Capital at Risk</strong> across the entire portfolio, categorizing stability into actionable tiers.</p>
                 </div>
             </div>
         </div>
@@ -295,8 +312,8 @@
                 </div>
                 <div>
                     <span class="tag">The Ingestion Pipeline</span>
-                    <h2>Intelligent Ingestion.</h2>
-                    <p>Tralo maps <strong>"Provision Language"</strong> directly to digital milestones. This removes manual data entry and creates a verified audit trail from day one.</p>
+                    <h2>Intelligent Document Ingestion</h2>
+                    <p>Tralo maps <strong>"Provision Language"</strong> directly from documents into digital milestones. This removes manual data entry and creates a verified audit trail from day one.</p>
                     <div class="feature-box" style="margin-top: 30px;">
                         <h4>Requirement Validation</h4>
                         <p>Every extracted parameter is cross-referenced against the agreement to ensure 100% governance accuracy.</p>
@@ -310,28 +327,30 @@
             <div class="grid-2">
                 <div>
                     <span class="tag">The Remediation Loop</span>
-                    <h2>Closed-Loop.</h2>
+                    <h2>Closed-Loop</h2>
                     <p>Communication bottlenecks are the primary cause of compliance failure. Tralo automates the entire distribution cycle.</p>
                     <ul style="list-style: none; padding: 0; margin-top: 30px;">
+                       <!--
                         <li style="margin-bottom: 20px; display: flex; align-items: center; gap: 15px;">
                             <i class="fas fa-paper-plane" style="color: var(--blue-500);"></i>
-                            <span>Multi-Channel Distribution (Email, SMS, Portal)</span>
+                            <span>Multi-Channel Distribution (Portal)</span>
                         </li>
+                        -->
                         <li style="margin-bottom: 20px; display: flex; align-items: center; gap: 15px;">
                             <i class="fas fa-bell" style="color: var(--blue-500);"></i>
-                            <span>Automated Proactive Reminders</span>
+                            <span>Proactive Reminders</span>
                         </li>
                         <li style="margin-bottom: 20px; display: flex; align-items: center; gap: 15px;">
                             <i class="fas fa-check-double" style="color: var(--blue-500);"></i>
-                            <span>Instant Evidence Collection & Validation</span>
+                            <span>Information History Log</span>
                         </li>
                     </ul>
                 </div>
                 <div style="text-align: center;">
-                   <div style="font-size: 6rem; color: rgba(255,255,255,0.05); position: absolute; right: 100px; top: 50%; transform: translateY(-50%); font-weight: 900;">REMEDIATE</div>
+                   <div style="font-size: 6rem; color: rgba(255,255,255,0.05); position: absolute; right: 100px; top: 50%; transform: translateY(-50%); font-weight: 900;"></div>
                    <div class="feature-box" style="position: relative; z-index: 2;">
                        <h3 style="color: var(--blue-500);">Operational Efficiency</h3>
-                       <p>By automating the nudge-and-collect cycle, Credit Admins save 70% of their manual reporting time.</p>
+                       <p>By automating the nudge-and-collect cycle, key parties could potentially save 70% of their manual reporting time.</p>
                    </div>
                 </div>
             </div>
@@ -343,10 +362,12 @@
                 <span class="tag">Final Vision</span>
                 <h2 style="font-size: 4rem;">Compliance, Automated.</h2>
                 <p style="margin-top: 20px;">Tralo is ready to transform how institutional lenders manage risk, protecting billions in capital through proactive governance.</p>
+                <!--
                 <div style="margin-top: 50px; display: flex; gap: 20px;">
                     <button class="btn primary">Request Case Study</button>
                     <button class="btn" onclick="goTo(0)">Restart Pitch</button>
                 </div>
+                -->
             </div>
         </div>
 
