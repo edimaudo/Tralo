@@ -39,6 +39,9 @@ def inject_now():
 @app.route('/')
 def index(): return render_template('index.html')
 
+@app.route('/deck')
+def index(): return render_template('pitch_deck.html')
+
 @app.route('/dashboard')
 def dashboard():
     total_off_track = 0
